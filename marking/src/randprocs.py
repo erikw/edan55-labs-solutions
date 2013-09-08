@@ -57,6 +57,7 @@ class R2(RandProc):
         return self._permutation[self._perm_iter_pos]
 
 
+# TODO implement reverse knuth shuffle andor custom set that has dict mapping pos in a list and reverse knuthshuffle that
 class R3(RandProc):
     def __init__(self, *args, **kwargs):
         super(R3, self).__init__("R3", *args, **kwargs)
