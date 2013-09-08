@@ -1,21 +1,23 @@
-import networkx as nx
-import matplotlib.pyplot as plt
-# TODO noo need for networkx, just use a set of integers?
+#import networkx as nx
+#import matplotlib.pyplot as plt
 
 def mark_counter(mark_func):
     def counter(marker, number):
         marker.mark_count += 1
+        #print("decorating on markNo {:d}".format(number))
         return mark_func(marker, number)
     return counter
 
 class Marker:
     def __init__(self, tree_height):
         self._height = tree_height
-        self._g = nx.balanced_tree(2, tree_height)
+        #self._g = nx.balanced_tree(2, tree_height - 1)
         self.mark_count = 0
-        nx.freeze(self._g)
-        self.nbr_nodes = self._g.number_of_nodes()
+        #nx.freeze(self._g)
+        #self.nbr_nodes = self._g.number_of_nodes()
+        self.nbr_nodes = 2**self._height - 1
         self.marked = set()
+        self.unmarked = set([i for i in range(0, self.nbr_nodes)])
         #for node in self._g.nodes_iter(data=True):
             #node[1]['marked'] = False
             ##print(node)
@@ -23,40 +25,45 @@ class Marker:
     def all_marked(self):
         return len(self.marked) == self.nbr_nodes
 
-    # TODO where to place "static" methods? in class out outside, take self arg?
+    def _mark_node(self, node):
+        self.marked.add(node)
+        self.unmarked.remove(node)
+
     def _is_leaf(self, number):
         return number >= (self.nbr_nodes / 2)
 
-    def _is_root(self, number):
+    @staticmethod
+    def _is_root(number):
         return number == 0
 
-
-    def _child_type(self, number):
+    @staticmethod
+    def _child_type(number):
         if self.nbr_nodes % 2 == 0:
             return 'right'
         else:
             return 'left'
 
-    def _children_of(self, parent):
+    @staticmethod
+    def _children_of(parent):
         base = parent * 2
         return base + 1, base + 2
 
-    def _parent_of(self, child):
+    @staticmethod
+    def _parent_of(child):
         return int((child - 1) / 2)
 
-    @mark_counter
-    def mark(self, number):
+    def _mark_cascade(self, number):
         if number in self.marked:
             return
         print("{:d}\tx\tMarked by Bob.".format(number))
-        self.marked.add(number)
+        self._mark_node(number)
         if not self._is_leaf(number):
             (child_l, child_r) = self._children_of(number)
             # case 1,2(children)
             if child_l in self.marked and child_r not in self.marked:
-               self.mark(child_r)
+                self._mark_cascade(child_r)
             elif child_r in self.marked and child_l not in self.marked:
-               self.mark(child_l)
+                self._mark_cascade(child_l)
 
 
         if self._is_root(number):
@@ -66,10 +73,14 @@ class Marker:
                 (parent_lchild, parent_rchild) = self._children_of(parent)
                 if self._child_type(number) == "left":
                     if parent_rchild in self.marked:
-                        self.mark(parent)
+                        self._mark_cascade(parent)
                 else:
                     if parent_lchild in self.marked:
-                        self.mark(parent)
+                        self._mark_cascade(parent)
+
+    @mark_counter
+    def mark(self, number):
+        self._mark_cascade(number)
 
 
 
