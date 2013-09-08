@@ -44,16 +44,19 @@ class Marker:
     def _parent_of(self, child):
         return int((child - 1) / 2)
 
-    def _mark_cascade(self, number):
-        print("Cascade marking on node {:d}".format(number))
+    @mark_counter
+    def mark(self, number):
+        if number in self.marked:
+            return
+        print("{:d}\tx\tMarked by Bob.".format(number))
         self.marked.add(number)
         if not self._is_leaf(number):
             (child_l, child_r) = self._children_of(number)
             # case 1,2(children)
             if child_l in self.marked and child_r not in self.marked:
-               self._mark_cascade(child_r)
+               self.mark(child_r)
             elif child_r in self.marked and child_l not in self.marked:
-               self._mark_cascade(child_l)
+               self.mark(child_l)
 
 
         if self._is_root(number):
@@ -63,23 +66,15 @@ class Marker:
                 (parent_lchild, parent_rchild) = self._children_of(parent)
                 if self._child_type(number) == "left":
                     if parent_rchild in self.marked:
-                        self._mark_cascade(parent)
+                        self.mark(parent)
                 else:
                     if parent_lchild in self.marked:
-                        self._mark_cascade(parent)
+                        self.mark(parent)
 
-
-
-    @mark_counter
-    def mark(self, number):
-        print("Start marking node: {:d}".format(number))
-        if number not in self.marked:
-            self.marked.add(number)
-        self._mark_cascade(number)
 
 
     def status(self):
-        return "nbr_marked = {:d}, mark_count = {:d}".format(len(self.marked), self.mark_count)
+        return "nbr_marked = {:d}\nsend count = {:d}".format(len(self.marked), self.mark_count)
 
 
 
