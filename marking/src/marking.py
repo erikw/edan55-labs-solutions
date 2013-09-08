@@ -5,11 +5,11 @@ __author__ = "Erik Westrup"
 __email__ = "erik.westrup@gmail.com"
 
 import sys
-import networkx as nx
 import argparse
-import matplotlib.pyplot as plt
+
 from randprocs import *
 from intrange import IntRange
+from marker import Marker
 
 
 def parse_args():
@@ -26,16 +26,13 @@ def parse_args():
 
 def main():
     (rand_proc, tree_height) = parse_args()
-    G = nx.balanced_tree(2, tree_height)
-    print(G.number_of_nodes())
-    print(G.number_of_edges())
-
-    #print(G.nodes())
-    #nx.draw(G)
-    #nx.draw_spectral(G)
-    #plt.show()
-
-
+    marker = Marker(tree_height)
+    while not marker.all_marked():
+        nbr = rand_proc.next_nbr(marker)
+        #print("Next rand node to mark is: {:d}".format(nbr))
+        marker.mark(nbr)
+        print(marker.status())
+    print("All done.")
     return 0
 
 

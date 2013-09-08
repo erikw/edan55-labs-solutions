@@ -1,4 +1,5 @@
 import abc
+import random
 
 class RandProc(metaclass=abc.ABCMeta):
     def __init__(self, name):
@@ -11,7 +12,7 @@ class RandProc(metaclass=abc.ABCMeta):
     __repr__ = __str__
 
     @abc.abstractmethod
-    def fun():
+    def next_nbr(self, marker):
         pass
 
 class R1(RandProc):
@@ -23,8 +24,8 @@ class R1(RandProc):
 
     __repr__ = __str__
 
-    def fun():
-        pass
+    def next_nbr(self, marker):
+        return random.randint(0, marker.nbr_nodes - 1)
 
 class R2(RandProc):
     def __init__(self, *args, **kwargs):
@@ -35,7 +36,7 @@ class R2(RandProc):
 
     __repr__ = __str__
 
-    def fun():
+    def next_nbr(self, marker):
         pass
 
 class R3(RandProc):
@@ -47,5 +48,5 @@ class R3(RandProc):
 
     __repr__ = __str__
 
-    def fun():
+    def next_nbr(self, marker):
         pass
