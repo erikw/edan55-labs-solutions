@@ -5,6 +5,7 @@
 # TODO collect all data in a matrix or such
 
 import sys
+import re
 
 import numpy
 
@@ -55,45 +56,31 @@ def main():
                         rand_proc = R2(nbr_nodes)
                     marker = Marker(tree_height)
                 marker.run(rand_proc)
-                #print(marker.status())
                 nbr_rounds.append(marker.mark_count)
-            #print(numpy.mean(nbr_rounds))
             stats[tree_height][proc_num] = {}
-            # TOOD format mean stddev as Thore wants
-            stats[tree_height][proc_num]['rounds_mean'] = numpy.mean(nbr_rounds)
             stats[tree_height][proc_num]['rounds_stddev'] = numpy.std(nbr_rounds)
+            stats[tree_height][proc_num]['rounds_mean'] = numpy.mean(nbr_rounds)
             proc_num += 1
-
 
     matrix_file = open(matrix_file_name, 'w')
     matrix_file.write(latex_matrix_header)
     for height in range(2, max_tree_height):
         matrix_file.write("{:d} ".format(2**height - 1))
         for proc_num in (1,2,3):
-            matrix_file.write(\
-            " & {:f} \pm {:f}".format(\
-                    stats[height][proc_num]['rounds_mean'],\
-                    stats[height][proc_num]['rounds_stddev']\
-                    )
-                )
+            stddev = stats[height][proc_num]['rounds_stddev']
+            stddev = "{:.1e}".format(stddev)
+            #stddev, exp = stddev.split("e(+|-)", 1)
+            stddev, sign, exp = re.split("e(\+|-)", stddev)
+            if sign == '+': 
+                sign = ''
+            exp = int(exp)
+            mean = stats[height][proc_num]['rounds_mean']
+            if exp == 0:
+                matrix_file.write(" & {:f} \pm {:s}".format( mean, stddev))
+            else:
+                matrix_file.write(" & {:f} \pm {:s} x $10^{{{:s}{:d}}}$".format( mean, stddev, sign, exp))
         matrix_file.write(" \\\\\n")
-                              
     matrix_file.write(latex_matrix_footer + "\n")
-
-
-
-    # TODO print latex tabel instread to file
-    #print("H | N      | R1              | R2               | R3")
-    #print('  |' + (' ' * 10) + ("mRnds | mTime   |  " * 3))
-    #print('-' * 66)
-    #for height in range(2, max_tree_height):
-        #print("{:d} | {:4d}| ".format(height, (2**height - 1)), end='')
-        #for proc_num in (1,2,3):
-            #print("{:.1f}   {:.8f}     | ".format(stats[height][proc_num]['mean_rounds'], stats[height][proc_num]['mean_time']), end='')
-        #print()
-
-    #print(stats)
-
     return 0
 
 if __name__ == "__main__":
