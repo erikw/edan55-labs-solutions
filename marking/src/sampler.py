@@ -17,22 +17,16 @@ max_tree_height = 8 + 1 # TODO kaputt
 
 matrix_file_name = '../docs/myreport/stats_table.tex'
 latex_matrix_header  = r"""
-\medskip\noindent
-\begin{tabular}{
-    S[table-format = 7]
-    S[table-format = 1.1(1)e1]
-    S[table-format = 1.1(1)e1]
-    S[table-format = 1.1(1)e1]
-  } 
-% WARNING: This table the (brilliant) siunitx package.
-% This allows typesetting of nicely aligned numbers.
-% If this is too much to absorb, just use a normal Latex table.
-% (Or do the table in another tool, export as PDF, and include it.)
-% Or do the whole report in your favourite word processor instead.
-\toprule
-{ $N$ } & { $R_1$ } & {$R_2$} & {$R_3$} \\\midrule
+\begin{table}
+\begin{center}
+\begin{tabular}{r | r | r | r | r}
+$H$ & $N$ & $R_1$ & $R_2$ & $R_3$ \\ \hline
 """
-latex_matrix_footer  = "\end{tabular}"
+latex_matrix_footer  = r"""
+\end{tabular}
+\end{center}
+\end{table}
+"""
 
 
 #def print_log(text, indent=1):
@@ -65,20 +59,25 @@ def main():
     matrix_file = open(matrix_file_name, 'w')
     matrix_file.write(latex_matrix_header)
     for height in range(2, max_tree_height):
-        matrix_file.write("{:d} ".format(2**height - 1))
+        matrix_file.write("{:d} & {:d} ".format(height, (2**height - 1)))
         for proc_num in (1,2,3):
             stddev = stats[height][proc_num]['rounds_stddev']
             stddev = "{:.1e}".format(stddev)
-            #stddev, exp = stddev.split("e(+|-)", 1)
             stddev, sign, exp = re.split("e(\+|-)", stddev)
-            if sign == '+': 
-                sign = ''
             exp = int(exp)
             mean = stats[height][proc_num]['rounds_mean']
-            if exp == 0:
-                matrix_file.write(" & {:f} \pm {:s}".format( mean, stddev))
-            else:
-                matrix_file.write(" & {:f} \pm {:s} x $10^{{{:s}{:d}}}$".format( mean, stddev, sign, exp))
+            outstr = " & ${:.1f} \pm {:s}$".format(mean, stddev)
+            if exp > 0:
+                if sign == '+': 
+                    sign = ''
+                    mean /= (10 * exp)
+                else:
+                    mean *= (10 * exp)
+                if exp == 1 and sign != '-':
+                    outstr += " $\\times 10$"
+                else:
+                    outstr += " $\\times 10^{{{:s}{:d}}}$".format(sign, exp)
+            matrix_file.write(outstr)
         matrix_file.write(" \\\\\n")
     matrix_file.write(latex_matrix_footer + "\n")
     return 0
