@@ -14,8 +14,28 @@ from marker import *
 samples = 2**4
 max_tree_height = 8 + 1 # TODO kaputt
 
-def print_log(text, indent=1):
-    print('-' * indent + "> {:s}".format(text))
+matrix_file_name = '../docs/myreport/stats_table.tex'
+latex_matrix_header  = r"""
+\medskip\noindent
+\begin{tabular}{
+    S[table-format = 7]
+    S[table-format = 1.1(1)e1]
+    S[table-format = 1.1(1)e1]
+    S[table-format = 1.1(1)e1]
+  } 
+% WARNING: This table the (brilliant) siunitx package.
+% This allows typesetting of nicely aligned numbers.
+% If this is too much to absorb, just use a normal Latex table.
+% (Or do the table in another tool, export as PDF, and include it.)
+% Or do the whole report in your favourite word processor instead.
+\toprule
+{ $N$ } & { $R_1$ } & {$R_2$} & {$R_3$} \\\midrule
+"""
+latex_matrix_footer  = "\end{tabular}"
+
+
+#def print_log(text, indent=1):
+    #print('-' * indent + "> {:s}".format(text))
 
 def main():
     stats = [[None] * 4 for i in range(0, max_tree_height)]
@@ -39,9 +59,27 @@ def main():
                 nbr_rounds.append(marker.mark_count)
             #print(numpy.mean(nbr_rounds))
             stats[tree_height][proc_num] = {}
-            stats[tree_height][proc_num]['mean_rounds'] = numpy.mean(nbr_rounds)
-            #stats[tree_height][proc_num - 1]['std_dev_rounds'] = 
+            # TOOD format mean stddev as Thore wants
+            stats[tree_height][proc_num]['rounds_mean'] = numpy.mean(nbr_rounds)
+            stats[tree_height][proc_num]['rounds_stddev'] = numpy.std(nbr_rounds)
             proc_num += 1
+
+
+    matrix_file = open(matrix_file_name, 'w')
+    matrix_file.write(latex_matrix_header)
+    for height in range(2, max_tree_height):
+        matrix_file.write("{:d} ".format(2**height - 1))
+        for proc_num in (1,2,3):
+            matrix_file.write(\
+            " & {:f} \pm {:f}".format(\
+                    stats[height][proc_num]['rounds_mean'],\
+                    stats[height][proc_num]['rounds_stddev']\
+                    )
+                )
+        matrix_file.write(" \\\\\n")
+                              
+    matrix_file.write(latex_matrix_footer + "\n")
+
 
 
     # TODO print latex tabel instread to file

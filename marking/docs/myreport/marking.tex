@@ -21,33 +21,7 @@ is completely marked in process $i$ is given in the following table.
 The table shows the result of $[\cdots]$ repeated
 trails.
 
-\medskip\noindent
-\begin{tabular}{
-    S[table-format = 7]
-    S[table-format = 1.1(1)e1]
-    S[table-format = 1.1(1)e1]
-    S[table-format = 1.1(1)e1]
-  } 
-% WARNING: This table the (brilliant) siunitx package.
-% This allows typesetting of nicely aligned numbers.
-% If this is too much to absorb, just use a normal Latex table.
-% (Or do the table in another tool, export as PDF, and include it.)
-% Or do the whole report in your favourite word processor instead.
-\toprule
-{ $N$ } & { $R_1$ } & {$R_2$} & {$R_3$} \\\midrule
-3 & 2.5\pm 0.9 \\
-7 & \\
-15 & \\
-31 & \\
-63 & \\
-127 & \\
-255 & \\
-511 & \\
-1023 & 3.3 \pm 0.8 e4\\
-$\vdots$ \\
-524287 & 3.2 \pm 0.2 e6 \\
-1048575 \\\bottomrule
-\end{tabular}
+\input{stats_table.tex}
 
 \subsection{Analysis}
 
