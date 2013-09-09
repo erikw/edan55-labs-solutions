@@ -1,0 +1,61 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[separate-uncertainty]{siunitx}
+\usepackage{tikz}
+
+\newtheorem{claim}{Claim}[section]
+\title{\sf Lab Report: Marking Trees}
+\date{}
+\begin{document}
+\maketitle
+
+by Erik Westrup. 
+
+\subsection{Results}
+
+For $i\in\{1,2,3\}$, the number of rounds $R_i$ spent until the tree
+is completely marked in process $i$ is given in the following table.
+The table shows the result of $[\cdots]$ repeated
+trails.
+
+\medskip\noindent
+\begin{tabular}{
+    S[table-format = 7]
+    S[table-format = 1.1(1)e1]
+    S[table-format = 1.1(1)e1]
+    S[table-format = 1.1(1)e1]
+  } 
+% WARNING: This table the (brilliant) siunitx package.
+% This allows typesetting of nicely aligned numbers.
+% If this is too much to absorb, just use a normal Latex table.
+% (Or do the table in another tool, export as PDF, and include it.)
+% Or do the whole report in your favourite word processor instead.
+\toprule
+{ $N$ } & { $R_1$ } & {$R_2$} & {$R_3$} \\\midrule
+3 & 2.5\pm 0.9 \\
+7 & \\
+15 & \\
+31 & \\
+63 & \\
+127 & \\
+255 & \\
+511 & \\
+1023 & 3.3 \pm 0.8 e4\\
+$\vdots$ \\
+524287 & 3.2 \pm 0.2 e6 \\
+1048575 \\\bottomrule
+\end{tabular}
+
+\subsection{Analysis}
+
+Our experimental data indicates that $\mathbf E [R_1]$ is [$\ldots$],
+while $\mathbf E[R_2]$ [$\cdots$], and $\mathbf E[R_3]$
+[$\cdots$].
+
+Theoretically, the behaviour of $R_1$ can be explained as follows: [$\cdots$] 
+
+
+\end{document}
