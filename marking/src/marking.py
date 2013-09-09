@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # Marking lab in EDAN55.
 # TODO bootstrap runner to generate data like Thore https://piazza.com/class/hl3gou3b70b4io?cid=8, using scipy /home/erikw/edu/lth/d3/faff25/photonics/assignment
-# TODO min number send count in R3?
+# TODO min number send count in R3 deterministic
 # TODO is algo linear in time?
 # TODO measure space?
-# TODO better performance wo/ networkx?
 
 __author__ = "Erik Westrup"
 __email__ = "erik.westrup@gmail.com"
@@ -14,7 +13,7 @@ import argparse
 
 from randprocs import *
 from intrange import IntRange
-from marker import Marker
+from marker import Marker, MarkerR3
 
 
 def parse_args():
@@ -32,10 +31,13 @@ def parse_args():
 
 def main():
     (rand_proc, tree_height) = parse_args()
-    marker = Marker(tree_height)
+    if isinstance(rand_proc, R3):
+        marker = MarkerR3(tree_height)
+    else:
+        marker = Marker(tree_height)
     while not marker.all_marked():
         nbr = rand_proc.next_nbr(marker)
-        print("{:d}\t->\tSent by Alice.".format(nbr))
+        #print("{:d}\t->\tSent by Alice.".format(nbr))
         marker.mark(nbr)
     print(marker.status())
     return 0

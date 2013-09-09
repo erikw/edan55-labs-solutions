@@ -17,7 +17,6 @@ class Marker:
         #self.nbr_nodes = self._g.number_of_nodes()
         self.nbr_nodes = 2**self._height - 1
         self.marked = set()
-        self.unmarked = set([i for i in range(0, self.nbr_nodes)])
         #for node in self._g.nodes_iter(data=True):
             #node[1]['marked'] = False
             ##print(node)
@@ -27,7 +26,6 @@ class Marker:
 
     def _mark_node(self, node):
         self.marked.add(node)
-        self.unmarked.remove(node)
 
     def _is_leaf(self, number):
         return number >= (self.nbr_nodes / 2)
@@ -55,7 +53,7 @@ class Marker:
     def _mark_cascade(self, number):
         if number in self.marked:
             return
-        print("{:d}\tx\tMarked by Bob.".format(number))
+        #print("{:d}\tx\tMarked by Bob.".format(number))
         self._mark_node(number)
         if not self._is_leaf(number):
             (child_l, child_r) = self._children_of(number)
@@ -82,12 +80,34 @@ class Marker:
     def mark(self, number):
         self._mark_cascade(number)
 
-
-
     def status(self):
-        return "nbr_marked = {:d}\nsend count = {:d}".format(len(self.marked), self.mark_count)
+        #return "nbr_marked = {:d}\nsend count = {:d}".format(len(self.marked), self.mark_count)
+        return "send count = {:d}".format(self.mark_count)
 
 
+class MarkerR3(Marker):
+    def __init__(self, *args, **kwargs):
+        super(MarkerR3, self).__init__(*args, **kwargs)
+        self.unmarked = [i for i in range(0, self.nbr_nodes)]
+        self.unmarked_active_elems = self.nbr_nodes
+        #self._unmarked_pos = {i : i for i in range(0, self.nbr_nodes)}
+        self._unmarked_pos = {}
+
+    def _mark_node(self, node):
+        super(MarkerR3, self)._mark_node(node)
+        #print("unmarked before mar_node")
+        #print(self.unmarked)
+        #self.unmarked.remove(node)
+        if node not in self._unmarked_pos:
+            node_pos = node
+        else:
+            node_pos = self._unmarked_pos[node]
+        self.unmarked[node_pos], self.unmarked[self.unmarked_active_elems - 1] = \
+            self.unmarked[self.unmarked_active_elems - 1], self.unmarked[node_pos]
+        self.unmarked_active_elems -= 1
+        self._unmarked_pos[self.unmarked[node_pos]] = node_pos
+        #print("unmarked AFTER mar_node")
+        #print(self.unmarked)
 
 
 
