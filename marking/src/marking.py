@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 # Marking lab in EDAN55.
-# TODO bootstrap runner to generate data like Thore https://piazza.com/class/hl3gou3b70b4io?cid=8, using scipy /home/erikw/edu/lth/d3/faff25/photonics/assignment
-# TODO min number send count in R3 deterministic
-# TODO is algo linear in time?
-# TODO measure space?
-# TODO  which is the last number alice sends
-# TODO R1 for H=14 should be more like 35000 +- stddev 8000
 
 __author__ = "Erik Westrup"
 __email__ = "erik.westrup@gmail.com"

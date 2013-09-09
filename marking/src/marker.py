@@ -1,25 +1,15 @@
-#import networkx as nx
-#import matplotlib.pyplot as plt
-
 def mark_counter(mark_func):
     def counter(marker, number):
         marker.mark_count += 1
-        #print("decorating on markNo {:d}".format(number))
         return mark_func(marker, number)
     return counter
 
 class Marker:
     def __init__(self, tree_height):
         self._height = tree_height
-        #self._g = nx.balanced_tree(2, tree_height - 1)
         self.mark_count = 0
-        #nx.freeze(self._g)
-        #self.nbr_nodes = self._g.number_of_nodes()
         self.nbr_nodes = 2**self._height - 1
         self.marked = set()
-        #for node in self._g.nodes_iter(data=True):
-            #node[1]['marked'] = False
-            ##print(node)
 
     def _all_marked(self):
         return len(self.marked) == self.nbr_nodes
@@ -36,7 +26,7 @@ class Marker:
 
     @staticmethod
     def _child_type(number):
-        if self.nbr_nodes % 2 == 0:
+        if number % 2 == 0:
             return 'right'
         else:
             return 'left'
@@ -51,30 +41,28 @@ class Marker:
         return int((child - 1) / 2)
 
     def _mark_cascade(self, number):
-        if number in self.marked:
-            return
-        #print("{:d}\tx\tMarked by Bob.".format(number))
+        #if number in self.marked:
+            #return
         self._mark_node(number)
+        #print("{:d}\tx\tMarked by Bob.".format(number))
         if not self._is_leaf(number):
             (child_l, child_r) = self._children_of(number)
-            # case 1,2(children)
             if child_l in self.marked and child_r not in self.marked:
                 self._mark_cascade(child_r)
             elif child_r in self.marked and child_l not in self.marked:
                 self._mark_cascade(child_l)
 
-
-        if self._is_root(number):
+        if not self._is_root(number):
             parent = self._parent_of(number)
-            #  case 3(parent)
-            if not parent in self.marked:
-                (parent_lchild, parent_rchild) = self._children_of(parent)
-                if self._child_type(number) == "left":
-                    if parent_rchild in self.marked:
-                        self._mark_cascade(parent)
-                else:
-                    if parent_lchild in self.marked:
-                        self._mark_cascade(parent)
+            (parent_lchild, parent_rchild) = self._children_of(parent)
+            if parent in self.marked:
+                if self._child_type(number) == 'left' and not parent_rchild in self.marked:
+                    self._mark_cascade(parent_rchild)
+                elif not parent_lchild in self.marked:
+                    self._mark_cascade(parent_lchild)
+            else:
+                if parent_lchild in self.marked and parent_rchild in self.marked:
+                    self._mark_cascade(parent)
 
     @mark_counter
     def _mark(self, number):
@@ -82,13 +70,13 @@ class Marker:
 
     def run(self, rand_proc):
         while not self._all_marked():
-            #nbr = rand_proc.next_nbr(marker)
-            #print("{:d}\t->\tSent by Alice.".format(nbr))
-            self._mark(rand_proc.next_nbr(self))
+            #self._mark(rand_proc.next_nbr(self))
+            next_nbr = rand_proc.next_nbr(self)
+            #print("{:d}\t-> \tSent by Alice.".format(next_nbr))
+            self._mark(next_nbr)
 
 
     def status(self):
-        #return "nbr_marked = {:d}\nsend count = {:d}".format(len(self.marked), self.mark_count)
         return "send count = {:d}".format(self.mark_count)
 
 
@@ -97,40 +85,15 @@ class MarkerR3(Marker):
         super(MarkerR3, self).__init__(*args, **kwargs)
         self.unmarked = [i for i in range(0, self.nbr_nodes)]
         self.unmarked_active_elems = self.nbr_nodes
-        #self._unmarked_pos = {i : i for i in range(0, self.nbr_nodes)}
         self._unmarked_pos = {}
 
     def _mark_node(self, node):
         super(MarkerR3, self)._mark_node(node)
-        #print("unmarked before mar_node")
-        #print(self.unmarked)
-        #self.unmarked.remove(node)
         if node not in self._unmarked_pos:
             node_pos = node
         else:
             node_pos = self._unmarked_pos[node]
         self.unmarked[node_pos], self.unmarked[self.unmarked_active_elems - 1] = \
-            self.unmarked[self.unmarked_active_elems - 1], self.unmarked[node_pos]
+                self.unmarked[self.unmarked_active_elems - 1], self.unmarked[node_pos]
         self.unmarked_active_elems -= 1
         self._unmarked_pos[self.unmarked[node_pos]] = node_pos
-        #print("unmarked AFTER mar_node")
-        #print(self.unmarked)
-
-
-
-
-
-
-
-
-
-
-
-
-    #print(G.number_of_nodes())
-        #print(G.number_of_edges())
-        #print(G.nodes())
-
-    #nx.draw(G)
-    #nx.draw_spectral(G)
-    #plt.show()
