@@ -35,10 +35,7 @@ def main():
         marker = MarkerR3(tree_height)
     else:
         marker = Marker(tree_height)
-    while not marker.all_marked():
-        nbr = rand_proc.next_nbr(marker)
-        #print("{:d}\t->\tSent by Alice.".format(nbr))
-        marker.mark(nbr)
+    marker.run(rand_proc)
     print(marker.status())
     return 0
 

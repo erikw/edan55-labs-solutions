@@ -21,7 +21,7 @@ class Marker:
             #node[1]['marked'] = False
             ##print(node)
 
-    def all_marked(self):
+    def _all_marked(self):
         return len(self.marked) == self.nbr_nodes
 
     def _mark_node(self, node):
@@ -77,8 +77,15 @@ class Marker:
                         self._mark_cascade(parent)
 
     @mark_counter
-    def mark(self, number):
+    def _mark(self, number):
         self._mark_cascade(number)
+
+    def run(self, rand_proc):
+        while not self._all_marked():
+            #nbr = rand_proc.next_nbr(marker)
+            #print("{:d}\t->\tSent by Alice.".format(nbr))
+            self._mark(rand_proc.next_nbr(self))
+
 
     def status(self):
         #return "nbr_marked = {:d}\nsend count = {:d}".format(len(self.marked), self.mark_count)

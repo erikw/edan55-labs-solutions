@@ -3,12 +3,12 @@ import random
 
 class RandProc(metaclass=abc.ABCMeta):
     def __init__(self, name, nbr_gens):
-        self._name = name
+        self.name = name
         self._nbr_gens = nbr_gens
 
     @abc.abstractmethod
     def __str__(self):
-        return "Random process \"%s\".".format(self._name)
+        return "Random process \"%s\".".format(self.name)
 
     __repr__ = __str__
 
