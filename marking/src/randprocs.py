@@ -40,6 +40,7 @@ class R2(RandProc):
     def _gen_knuth_nbrs(self):
         N = self._nbr_gens
         output = [0] + [None] * (N - 1)
+        #print("outputlen = {:d}, N = {:d}".format(len(output), N))
         for output_pos in range(1, N):
             rnd_pos = random.randint(0, output_pos)
             output[output_pos] = output[rnd_pos]
@@ -54,6 +55,7 @@ class R2(RandProc):
 
     def next_nbr(self, marker):
         self._perm_iter_pos += 1
+        #print(self._perm_iter_pos)
         return self._permutation[self._perm_iter_pos]
 
 class R3(RandProc):

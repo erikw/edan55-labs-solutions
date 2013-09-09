@@ -4,6 +4,8 @@
 # TODO min number send count in R3 deterministic
 # TODO is algo linear in time?
 # TODO measure space?
+# TODO  which is the last number alice sends
+# TODO R1 for H=14 should be more like 35000 +- stddev 8000
 
 __author__ = "Erik Westrup"
 __email__ = "erik.westrup@gmail.com"
