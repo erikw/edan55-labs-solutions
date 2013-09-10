@@ -1,3 +1,5 @@
+import math
+
 def mark_counter(mark_func):
     def counter(marker, number):
         marker.mark_count += 1
@@ -77,7 +79,8 @@ class Marker:
 
 
     def status(self):
-        return "send count = {:d}".format(self.mark_count)
+        #return "send count = {:d}".format(self.mark_count)
+        return "send cont = {:d}, send count / n = {:f}, n log n = {:f}, n= {:d},h = {:d}".format(self.mark_count, self.mark_count / self.nbr_nodes, self.nbr_nodes * math.log(self.nbr_nodes, 10), self.nbr_nodes, self._height)
 
 
 class MarkerR3(Marker):
