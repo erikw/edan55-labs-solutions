@@ -82,7 +82,7 @@ def main():
     return 0
 
 def R(edges, nbr_vertices):
-    # we actually don't seed set0 and set1 here! one set is enough
+    # we actually don't need set0 and set1 here! one set is enough
     setA = set()
     # in the input file, the vertices are numbered starting from 1
     for i in range(1, nbr_vertices + 1):
@@ -92,7 +92,7 @@ def R(edges, nbr_vertices):
 
     maxcut = 0
     for edge in edges:
-        # if only one of the endpoints in in setA, then use the edge for maxcut
+        # if only one of the endpoints is in setA, then use the edge for maxcut
         if (len(setA.intersection({edge.v1, edge.v2})) == 1):
             maxcut += edge.weight
     return maxcut
