@@ -2,6 +2,7 @@
 
 import sys
 from random import randint
+from os.path import basename
 from edge import Edge
 
 latex_file = "../docs/myreport/r1_data.tex"
@@ -58,9 +59,9 @@ def main():
         print("Expected one argument: file name.")
         return 1
     filename = sys.argv[1]
-    if filename == "../data/matching_1000.txt":
+    if basename(filename) == "matching_1000.txt":
         opt = 500
-    elif filename == '../data/pw09_100.9.txt':
+    elif basename(filename) == 'pw09_100.9.txt':
         opt = 13658
     else:
         raise ValueError("The input file \"{:s}\" is not recognized.".format(filename))
@@ -81,20 +82,19 @@ def main():
     return 0
 
 def R(edges, nbr_vertices):
-    set0 = set()
-    set1 = set()
-    for i in range(0, nbr_vertices):
+    # we actually don't seed set0 and set1 here! one set is enough
+    setA = set()
+    # in the input file, the vertices are numbered starting from 1
+    for i in range(1, nbr_vertices + 1):
         flip = randint(0,1)
-        if not flip:
-            set0.add(i)
-        else:
-            set1.add(i)
+        if flip:
+            setA.add(i)
 
     maxcut = 0
     for edge in edges:
-        if (edge.v1 in set0 and edge.v2 in set1) or (edge.v1 in set1 and edge.v2 in set0):
+        # if only one of the endpoints in in setA, then use the edge for maxcut
+        if (len(setA.intersection({edge.v1, edge.v2})) == 1):
             maxcut += edge.weight
-
     return maxcut
 
 if __name__ == '__main__':
