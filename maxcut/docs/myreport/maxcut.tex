@@ -17,11 +17,11 @@ by Erik Westrup and Dmitry Basavin.
 
 \subsection{Running time}
 
-The running time of algorithm~R is $[\ldots]$.
+The running time of algorithm~R is $\Theta(n + m)$.
 
 \subsection{Randomness}
 
-Algorithm R uses $[\ldots]$ random bits.
+Algorithm R uses $n$ random bits.
 
 \subsection{Solution quality}
 
@@ -30,130 +30,14 @@ Algorithm R uses $[\ldots]$ random bits.
 \begin{enumerate}
 \item
 For the input file  pw09\_100.9.txt with $t=100$ runs, we found
-an average cutsize of $C=[\ldots]$, roughly $[\ldots]$\% of the optimum
+an average cutsize of $C=12064.56$, roughly $88.33$\% of the optimum
 $\operatorname{OPT} = 13658$.
 The distribution of cutsizes looks as follows:
 
 \medskip
 
 \noindent
-\begin{tikzpicture}
-\begin{axis}[
-  height= 5cm,
-  ybar interval,
-  xmin = 0,  xmax = 13658,
-  xtick =       {0   ,   5000,   10000, 13658},
-  xticklabels = { $0$, $5000$, $10000$,   OPT},
-  x tick label as interval = false,
-  scaled ticks = false
-]
-    \addplot+[hist={bins=100}]
-        table[y index=0] {
-          % output of 
-          % perl -e "for $i (1..100) { system 'python sol/rmaxcut.py < data/pw09_100.9.txt '}"
-12296
-12401
-12176
-12414
-11767
-12458
-12407
-12551
-12363
-12526
-11865
-12353
-12159
-12504
-12130
-11616
-12347
-12201
-12473
-12368
-12196
-12274
-12064
-12398
-12733
-12620
-12402
-12231
-12442
-12360
-12567
-11650
-12334
-12543
-12108
-12523
-12256
-12524
-12642
-12040
-12404
-12408
-12606
-12094
-12484
-12457
-12459
-12326
-12307
-12282
-12276
-12459
-12107
-12474
-12410
-12109
-12308
-12471
-12588
-12473
-12338
-12499
-12233
-12453
-12448
-12541
-12488
-12497
-12230
-12393
-12335
-12446
-11503
-12304
-12612
-12378
-12108
-12684
-12422
-12557
-12441
-12334
-12400
-12369
-11734
-12237
-12631
-12289
-11773
-12460
-12366
-12355
-12502
-12323
-12543
-12271
-12415
-12227
-12711
-12370
-    };
-\end{axis}
-\end{tikzpicture}
+\input{r1_data.tex}
 
 \item
 For the input file matching\_1000.txt
@@ -191,3 +75,5 @@ $[\ldots]$.
 
 
 \end{document}
+
+# file two: first node does not matter, 50% that the sedond gets right -> 0.5OPT, .5^n prop of hitting OPT
