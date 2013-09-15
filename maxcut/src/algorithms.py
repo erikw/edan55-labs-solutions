@@ -10,7 +10,6 @@ def R(edges, nbr_vertices):
 
     cut_weight = 0
     for edge in edges:
-        # if only one of the endpoints is in setA, then use the edge for maxcut
         if len(setA.intersection({edge.v1, edge.v2})) == 1:
             cut_weight += edge.weight
     return cut_weight
