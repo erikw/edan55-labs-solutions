@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
+# Maxcut lab2 in EDAN55 2013.
+
+__author__ = "Erik Westrup, Dmitry Basavin"
 
 import sys
+import argparse
 from random import randint
 from os.path import basename
+
 from edge import Edge
 
 latex_file = "../docs/myreport/r1_data.tex"
@@ -67,6 +72,12 @@ def R(edges, nbr_vertices):
             cut_weight += edge.weight
     return cut_weight
 
+def L(edges, nbr_vertices):
+    pass
+
+def Z(edges, nbr_vertices):
+    pass
+
 def set_opt_from_filename(filename):
     if basename(filename) == "matching_1000.txt":
         opt = 500
@@ -76,19 +87,28 @@ def set_opt_from_filename(filename):
         raise ValueError("The input file \"{:s}\" is not recognized.".format(filename))
     return opt
 
-# TODO add argparse and write to different file dependent on what algo was used.
+def parse_args():
+    parser = argparse.ArgumentParser(description='Approximate a max cut.')
+    parser.add_argument('-a', '--algorithm', choices=['R', 'L', 'Z'], action='store', default='R', help="The algoritm for appoximation to use.")
+    parser.add_argument('filename', nargs='?', default='../data/matching_1000.txt', help="File name to read graph from.")
+    args = parser.parse_args()
+
+    alg_func = {
+            'R' : R,
+            'L' : L,
+            'Z' : Z
+            }[args.algorithm]
+    return args.filename, alg_func
+
 def main():
-    if len(sys.argv)  != 2:
-        print("Expected one argument: file name.")
-        return 1
-    filename = sys.argv[1]
+    filename, algorithm = parse_args()
     opt = set_opt_from_filename(filename)
     edges, nbr_vertices = read_datafile(filename)
 
     maxcut = 0;
     results = []
     for i in range(0, no_samples):
-        candidate = R(edges, nbr_vertices)
+        candidate = algorithm(edges, nbr_vertices)
         results.append(candidate)
         if candidate > maxcut:
             maxcut = candidate
