@@ -10,7 +10,7 @@ from os.path import basename
 from edge import Edge
 from algorithms import R, L, Z
 
-latex_file = "../docs/myreport/r1_data.tex"
+latex_out_path = "../docs/myreport/data"
 no_samples = 100
 
 latex_data_pre = r"""
@@ -49,7 +49,8 @@ def read_datafile(filename):
     filehandle.close()
     return edges, nbr_vertices
 
-def write_latex_file(results):
+def write_latex_file(results, filename, algorithm):
+    latex_file = "{:s}/{:s}_{:s}.tex".format(latex_out_path, algorithm.__name__, basename(filename))
     file_handle = open(latex_file, 'w')
     file_handle.write(latex_data_pre)
     for result in results:
@@ -94,7 +95,7 @@ def main():
     avg_cutsize = sum(results) / len(results)
     opt_percentage = avg_cutsize /opt * 100
     print("Over {:d} samples:\n\tmaxcut = {:d}\n\tAvg cutsize = {:.2f}, which is {:.2f}% of OPT={:d}".format(no_samples, maxcut, avg_cutsize, opt_percentage, opt))
-    write_latex_file(results)
+    write_latex_file(results, filename, algorithm)
     return 0
 
 if __name__ == '__main__':
