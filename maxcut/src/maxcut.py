@@ -5,10 +5,10 @@ __author__ = "Erik Westrup, Dmitry Basavin"
 
 import sys
 import argparse
-from random import randint
 from os.path import basename
 
 from edge import Edge
+from algorithms import R, L, Z
 
 latex_file = "../docs/myreport/r1_data.tex"
 no_samples = 100
@@ -56,27 +56,6 @@ def write_latex_file(results):
         file_handle.write("{:d}\n".format(result))
     file_handle.write(latex_data_post)
     file_handle.close()
-
-def R(edges, nbr_vertices):
-    setA = set()
-    # In the input file, the vertices are numbered starting from 1.
-    for i in range(1, nbr_vertices + 1):
-        flip = randint(0,1)
-        if flip:
-            setA.add(i)
-
-    cut_weight = 0
-    for edge in edges:
-        # if only one of the endpoints is in setA, then use the edge for maxcut
-        if len(setA.intersection({edge.v1, edge.v2})) == 1:
-            cut_weight += edge.weight
-    return cut_weight
-
-def L(edges, nbr_vertices):
-    pass
-
-def Z(edges, nbr_vertices):
-    pass
 
 def set_opt_from_filename(filename):
     if basename(filename) == "matching_1000.txt":
