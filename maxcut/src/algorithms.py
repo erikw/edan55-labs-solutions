@@ -2,7 +2,7 @@ from random import randint
 
 def R(edges, nbr_vertices):
     setA = set()
-    # In the input file, the vertices are numbered starting from 1.
+    # Verticies indexed starting from 1.
     for i in range(1, nbr_vertices + 1):
         flip = randint(0,1)
         if flip:

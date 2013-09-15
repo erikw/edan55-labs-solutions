@@ -91,10 +91,9 @@ def main():
         results.append(candidate)
         if candidate > maxcut:
             maxcut = candidate
-    print("Over {:d} samples, the found maxcut is {:d}".format(no_samples, maxcut))
     avg_cutsize = sum(results) / len(results)
-    print("Average cutsize is {:.2f}".format(avg_cutsize))
-    print("which is {:.2f}% of OPT(={:d})".format(avg_cutsize/opt * 100, opt))
+    opt_percentage = avg_cutsize /opt * 100
+    print("Over {:d} samples:\n\tmaxcut = {:d}\n\tAvg cutsize = {:.2f}, which is {:.2f}% of OPT={:d}".format(no_samples, maxcut, avg_cutsize, opt_percentage, opt))
     write_latex_file(results)
     return 0
 
