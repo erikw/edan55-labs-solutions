@@ -6,6 +6,7 @@ from os.path import basename
 from edge import Edge
 
 latex_file = "../docs/myreport/r1_data.tex"
+no_samples = 100
 
 latex_data_pre = r"""
 \begin{tikzpicture}
@@ -43,7 +44,6 @@ def read_datafile(filename):
     filehandle.close()
     return edges, nbr_vertices
 
-
 def write_latex_file(results):
     file_handle = open(latex_file, 'w')
     file_handle.write(latex_data_pre)
@@ -52,50 +52,52 @@ def write_latex_file(results):
     file_handle.write(latex_data_post)
     file_handle.close()
 
+def R(edges, nbr_vertices):
+    setA = set()
+    # In the input file, the vertices are numbered starting from 1.
+    for i in range(1, nbr_vertices + 1):
+        flip = randint(0,1)
+        if flip:
+            setA.add(i)
 
+    cut_weight = 0
+    for edge in edges:
+        # if only one of the endpoints is in setA, then use the edge for maxcut
+        if len(setA.intersection({edge.v1, edge.v2})) == 1:
+            cut_weight += edge.weight
+    return cut_weight
 
-def main():
-    if (len(sys.argv)  != 2):
-        print("Expected one argument: file name.")
-        return 1
-    filename = sys.argv[1]
+def set_opt_from_filename(filename):
     if basename(filename) == "matching_1000.txt":
         opt = 500
     elif basename(filename) == 'pw09_100.9.txt':
         opt = 13658
     else:
         raise ValueError("The input file \"{:s}\" is not recognized.".format(filename))
+    return opt
+
+# TODO add argparse and write to different file dependent on what algo was used.
+def main():
+    if len(sys.argv)  != 2:
+        print("Expected one argument: file name.")
+        return 1
+    filename = sys.argv[1]
+    opt = set_opt_from_filename(filename)
     edges, nbr_vertices = read_datafile(filename)
 
     maxcut = 0;
     results = []
-    for i in range(0, 100):
+    for i in range(0, no_samples):
         candidate = R(edges, nbr_vertices)
         results.append(candidate)
         if candidate > maxcut:
             maxcut = candidate
-    print("the found maxcut is {:d}".format(maxcut))
+    print("Over {:d} samples, the found maxcut is {:d}".format(no_samples, maxcut))
     avg_cutsize = sum(results) / len(results)
-    print("average cutsize is {:.2f}".format(avg_cutsize))
+    print("Average cutsize is {:.2f}".format(avg_cutsize))
     print("which is {:.2f}% of OPT(={:d})".format(avg_cutsize/opt * 100, opt))
     write_latex_file(results)
     return 0
-
-def R(edges, nbr_vertices):
-    # we actually don't need set0 and set1 here! one set is enough
-    setA = set()
-    # in the input file, the vertices are numbered starting from 1
-    for i in range(1, nbr_vertices + 1):
-        flip = randint(0,1)
-        if flip:
-            setA.add(i)
-
-    maxcut = 0
-    for edge in edges:
-        # if only one of the endpoints is in setA, then use the edge for maxcut
-        if (len(setA.intersection({edge.v1, edge.v2})) == 1):
-            maxcut += edge.weight
-    return maxcut
 
 if __name__ == '__main__':
     sys.exit(main())
