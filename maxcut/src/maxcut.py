@@ -13,7 +13,7 @@ from algorithms import R, L, Z
 latex_out_path = "../docs/myreport/data"
 no_samples = 100
 
-latex_data_pre = r"""
+latex_data_pre_pw = r"""
 \begin{tikzpicture}
 \begin{axis}[
   height= 5cm,
@@ -21,6 +21,21 @@ latex_data_pre = r"""
   xmin = 0,  xmax = 13658,
   xtick =       {0   ,   5000,   10000, 13658},
   xticklabels = { $0$, $5000$, $10000$,   OPT},
+  x tick label as interval = false,
+  scaled ticks = false
+]
+    \addplot+[hist={bins=101}]
+        table[y index=0] {
+"""
+
+latex_data_pre_match1000 = r"""
+\begin{tikzpicture}
+\begin{axis}[
+  height= 5cm,
+  ybar interval,
+  xmin = 0,  xmax = 500,
+  xtick =       {0   ,   100, 200, 300, 400, 500},
+  xticklabels =      {$0$   ,   $100$, $200$, $300$, $400$, OPT},
   x tick label as interval = false,
   scaled ticks = false
 ]
@@ -52,7 +67,10 @@ def read_datafile(filename):
 def write_latex_file(results, filename, algorithm):
     latex_file = "{:s}/{:s}_{:s}.tex".format(latex_out_path, algorithm.__name__, basename(filename))
     file_handle = open(latex_file, 'w')
-    file_handle.write(latex_data_pre)
+    if basename(filename) == 'pw09_100.9.txt':
+        file_handle.write(latex_data_pre_pw)
+    elif basename(filename) == 'matching_1000.txt':
+        file_handle.write(latex_data_pre_match1000)
     for result in results:
         file_handle.write("{:d}\n".format(result))
     file_handle.write(latex_data_post)

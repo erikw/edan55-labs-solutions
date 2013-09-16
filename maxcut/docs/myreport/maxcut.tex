@@ -61,7 +61,7 @@ Algorithm R uses $n$ random bits.
 \begin{enumerate}
 \item
 For the input file  pw09\_100.9.txt with $t=100$ runs, we found
-an average cutsize of $C=12064.56$, roughly $88.33$\% of the optimum
+an average cutsize of $C=12366.41$, roughly $90.54$\% of the optimum
 $\operatorname{OPT} = 13658$.
 The distribution of cutsizes looks as follows:
 
@@ -80,7 +80,6 @@ The distribution of cutsizes looks as follows:
 \input{data/R_matching_1000.txt.tex}
 
 
-$[\ldots]$
 \end{enumerate}
 \paragraph{Analysis of performance guarantee}
 
@@ -88,7 +87,7 @@ Clearly, Algorithm R performs quite badly on input
   matching\_1000.txt.
 We will show that it can perform \emph{no worse} than that, i.e., we
 will establish that in expectation, the cutsize $C$ satisfies $C \geq
-[\ldots]\cdot \operatorname{OPT}$.\
+\frac{1}{2}\cdot \operatorname{OPT}$.\
 
 
 We will view $C$ as a random variable that gives the size of the cut
@@ -107,8 +106,28 @@ Set $X_{uv}=1$ if $uv$ crosses the cut, i.e., $u\in A$ and $v\notin A$
 or $u\notin A$ and $v\in A$.
 Otherwise, $X_{uv} = 0$.
 
-Then, $\Pr(X_{uv} = 1) = [\ldots]$.
-Now, $E[C]=[\ldots]$ Finally, we have 
+Then, $\Pr(X_{uv} = 1) = \Pr((u\in A \land v \in V-A) \lor  (v\in A \land u \in V-A))=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$ because the outcomes are independent.
+Now
+\begin{equation*}
+	E[C]=E[\sum_{(uv)\in E}X_{uv}\cdot w(uv)]=[\mathrm{linearity~of~expectation}]
+\end{equation*}
+\begin{equation*}
+	=\sum_{(uv)\in E}E[X_{uv}]\cdot w(uv)
+\end{equation*}
+\begin{equation*}
+	=\sum_{(uv) \in E} Pr(X_{uv}=1)\cdot 1 \cdot w(uv)
+\end{equation*}
+\begin{equation*}
+	=\sum_{(uv) \in E} \frac{1}{2}\cdot w(uv)
+\end{equation*}
+\begin{equation*}
+	=\frac{1}{2}\sum_{(uv) \in E} w(uv)
+\end{equation*}
+\begin{equation*}
+	=\frac{1}{2} \cdot W
+\end{equation*}
+
+Finally, we have 
 \(E[C]\geq [\ldots]\cdot \text{OPT}\) because clearly
 $[\ldots]$.
 
