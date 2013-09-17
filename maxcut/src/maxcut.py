@@ -65,7 +65,7 @@ def read_datafile(filename):
         edges.append(Edge(v1, v2, weight))
         #G.add_edge(v1, v2)
     #nx.draw_circular(G)
-    plt.show()
+    #plt.show()
 
     filehandle.close()
     return edges, nbr_vertices
