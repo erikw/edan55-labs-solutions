@@ -88,7 +88,7 @@ def set_opt_from_filename(filename):
 def parse_args():
     parser = argparse.ArgumentParser(description='Approximate a max cut.')
     parser.add_argument('-a', '--algorithm', choices=['R', 'L', 'Z'], action='store', default='R', help="The algoritm for appoximation to use.")
-    parser.add_argument('filename', nargs='?', default='../data/matching_1000.txt', help="File name to read graph from.")
+    parser.add_argument('filename', nargs='?', default='../data/pw09_100.9.txt', help="File name to read graph from.")
     args = parser.parse_args()
 
     alg_func = {
