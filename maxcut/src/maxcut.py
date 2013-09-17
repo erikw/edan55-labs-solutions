@@ -6,6 +6,8 @@ __author__ = "Erik Westrup, Dmitry Basavin"
 import sys
 import argparse
 from os.path import basename
+#import networkx as nx
+#import matplotlib.pyplot as plt
 
 from edge import Edge
 from algorithms import R, L, Z
@@ -57,9 +59,13 @@ def read_datafile(filename):
         sys.exit(2)
     nbr_vertices, nbr_edges = (int(number) for number in filehandle.readline().split())
     edges = []
+    #G = nx.Graph()
     for i in range(0, nbr_edges):
         v1, v2, weight = (int(number) for number in filehandle.readline().split())
         edges.append(Edge(v1, v2, weight))
+        #G.add_edge(v1, v2)
+    #nx.draw_circular(G)
+    plt.show()
 
     filehandle.close()
     return edges, nbr_vertices
