@@ -106,7 +106,7 @@ Set $X_{uv}=1$ if $uv$ crosses the cut, i.e., $u\in A$ and $v\notin A$
 or $u\notin A$ and $v\in A$.
 Otherwise, $X_{uv} = 0$.
 
-Then, $\Pr(X_{uv} = 1) = \Pr([u\in A \land v \in V-A] \lor  [v\in A \land u \in V-A])=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$. This equation holds because the probabilistic events in the square brackets are disjoint. Now
+Then, $\Pr(X_{uv} = 1) = \Pr([u\in A \land v \in V-A] \lor  [v\in A \land u \in V-A])=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$. This equation holds because the probabilistic events in the square brackets are independent and disjoint. Now
 \begin{equation*}
 	E[C]=E \Big [\sum_{(e)\in E}X_{e}\cdot w(e) \Big]
 \end{equation*}
@@ -155,7 +155,7 @@ This gives a total of $n$ random bits.
 These random bits are not as high-quality as the original $k$ bits,
 but they retain the crucial property of \emph{pairwise independence}:
 If $S\neq T$ then
-\[ \Pr(r_S\neq r_T) = \frac1{2} \]
+\[ \Pr(r_S\neq r_T) = \frac1{2}
 
 Extend Algorithm~R using this idea; call the resulting
 algorithm~L (for logarithmic randomness).
@@ -169,8 +169,9 @@ over \emph{all} coin flips---there are only $2^k$, which is polynomial
 Extend algorithm~L using this idea; call the resulting algorithm~Z
 (for zero randomness).
 
+Our implementation of the Z algorithm first enumerates all $2^k$ subsets and then iterates over the $n$ first of these. In that iteration the work done is done by computation of the xor-sum which is linear in $k$. After the loop the maxcut is calculated over all the edges which takes time $m$.
+The running time of Z, with $k\approx \log_2 (n+1)$, is $O(2^k\cdot k + m)=O(2^{\log_2 (n+1)}\cdot \log_2 (n+1) + m)=O((n+1)\cdot \log_2(n+1) + m)=O((n\cdot \log_2(n) + m)$.
 
-Our implementation of the Z algorithm iterates over all $2^k$ subsets, and for each of them we generate $2^k$ sequences which are sum-xored in logarithmic time in $n$. And finally we find a weight of a max cut by summing over all the edges which requires the number of operations proportional to $m$. Hence, the total running time of the algorithm, with $k\approx \log_2 (n+1)$, is $O(2^k \cdot (2^k\cdot k + m)) = O(2^{\log_2 (n+1)}(2^{\log_2 (n+1)}\cdot \log_2 (n+1) + m)) = O((n+1)((n+1)\cdot \log_2(n+1) + m))=O(n((n\cdot \log_2(n) + m))$.
 
 
 
