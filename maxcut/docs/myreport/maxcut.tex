@@ -106,30 +106,32 @@ Set $X_{uv}=1$ if $uv$ crosses the cut, i.e., $u\in A$ and $v\notin A$
 or $u\notin A$ and $v\in A$.
 Otherwise, $X_{uv} = 0$.
 
-Then, $\Pr(X_{uv} = 1) = \Pr((u\in A \land v \in V-A) \lor  (v\in A \land u \in V-A))=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$ because the outcomes are independent.
-Now
+Then, $\Pr(X_{uv} = 1) = \Pr([u\in A \land v \in V-A] \lor  [v\in A \land u \in V-A])=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$. This equation holds because the probabilistic events in the square brackets are independent. Now
 \begin{equation*}
-	E[C]=E[\sum_{(uv)\in E}X_{uv}\cdot w(uv)]=[\mathrm{linearity~of~expectation}]
+	E[C]=E \Big [\sum_{(uv)\in E}X_{uv}\cdot w(uv) \Big]
+\end{equation*}
+Then by the linearity of expectation,
+\begin{equation*}
+	E[C] = \sum_{(uv)\in E}E[X_{uv}]\cdot w(uv) =
 \end{equation*}
 \begin{equation*}
-	=\sum_{(uv)\in E}E[X_{uv}]\cdot w(uv)
+	=\sum_{(uv) \in E} Pr(X_{uv}=1)\cdot 1 \cdot w(uv) =
 \end{equation*}
 \begin{equation*}
-	=\sum_{(uv) \in E} Pr(X_{uv}=1)\cdot 1 \cdot w(uv)
+	=\sum_{(uv) \in E} \frac{1}{2}\cdot w(uv) =
 \end{equation*}
 \begin{equation*}
-	=\sum_{(uv) \in E} \frac{1}{2}\cdot w(uv)
+	=\frac{1}{2}\sum_{(uv) \in E} w(uv) =\frac{1}{2} \cdot W
 \end{equation*}
-\begin{equation*}
-	=\frac{1}{2}\sum_{(uv) \in E} w(uv)
-\end{equation*}
-\begin{equation*}
-	=\frac{1}{2} \cdot W
-\end{equation*}
-
 Finally, we have 
-\(E[C]\geq [\ldots]\cdot \text{OPT}\) because clearly
-$[\ldots]$.
+\(E[C]\geq \frac1{2}\cdot \text{OPT}\) because since all the weights are positive:
+\begin{equation*}
+W \geq \text{OPT}
+\end{equation*}
+Hence,
+\begin{equation*}
+E[C] = \frac1{2} \cdot W \geq \frac1{2}\cdot \text{OPT}
+\end{equation*}
 
 
 \newpage
