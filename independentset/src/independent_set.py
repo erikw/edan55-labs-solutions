@@ -21,7 +21,6 @@ def read_datafile(filename):
     for i in range(nbr_nodes):
         node = get_or_create_node(i, existing_nodes)
         neighbours = [int(x) for x in filehandle.readline().split()]
-        print(neighbours)
         for j in range(nbr_nodes):
             if neighbours[j]:
                 neighbour_node = get_or_create_node(j, existing_nodes)
@@ -48,13 +47,14 @@ def parse_args():
             'R1' : R1,
             'R2' : R2
             }[args.algorithm]
+    print(type(alg_func))
     return args.filename, alg_func
 
 def main():
     filename, algorithm = parse_args()
     nodes = read_datafile(filename)
-    for node in nodes:
-        print(node)
+    max_is = algorithm(nodes)
+    print("The maximum number of independent nodes are {:d}".format(max_is))
     return 0
 
 if __name__ == '__main__':
