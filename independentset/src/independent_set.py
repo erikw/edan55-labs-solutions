@@ -6,9 +6,10 @@ __author__ = "Erik Westrup, Dmitry Basavin"
 import sys
 import argparse
 from os.path import basename
+
 from algorithm import R0, R1, R2
 from node import Node
-import copy
+from graph import Graph
 
 def read_datafile(filename):
     try:
@@ -28,7 +29,9 @@ def read_datafile(filename):
                 node.add_edge(neighbour_node)
                 neighbour_node.add_edge(node)
     filehandle.close()
-    return [x for x in existing_nodes.values()]
+
+    graph = Graph([x for x in existing_nodes.values()])
+    return graph
 
 def get_or_create_node(i, existing_nodes):
     if i in existing_nodes.keys():
@@ -53,8 +56,8 @@ def parse_args():
 
 def main():
     filename, algorithm = parse_args()
-    nodes = read_datafile(filename)  
-    max_is = algorithm(nodes)
+    graph = read_datafile(filename)  
+    max_is = algorithm(graph)
     print("The maximum number of independent nodes are {:d}".format(max_is))
     return 0
 
