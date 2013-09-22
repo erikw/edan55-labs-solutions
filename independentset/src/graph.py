@@ -1,23 +1,12 @@
-from node import Node
-
 class Graph:
 
     def __init__(self, node_ids):
         self._version = 0
         self._deleted_edges = {} # version -> [(node,node)]
-        self.nodes = {id : Node(id) for id in node_ids} # nodeID -> NodeObject # TODO needed?
-        self.mates = {node : set() for node in self.nodes.values()} # node -> set of NodeObjects
+        self.mates = {node : set() for node in node_ids} # node -> set of node
         
 
-    def add_edge(self, node1_id, node2_id):
-        if node1_id not in self.nodes:
-            self.nodes[node1_id] = Node(node1_id)
-        node1 = self.nodes[node1_id]
-
-        if node2_id not in self.nodes:
-            self.nodes[node2_id] = Node(node2_id)
-        node2 = self.nodes[node2_id]
-
+    def add_edge(self, node1, node2):
         if node1 not in self.mates:
             self.mates[node1] = set()
         self.mates[node1].add(node2)
@@ -78,8 +67,8 @@ class Graph:
             del self.mates[target]
 
     def __str__(self):
-        out = "Graph of size {:d}, with nodes: {:s}\nEdges:\n".format(len(self.nodes), self.nodes)
+        out = "Graph of size {:d}, with nodes: {:s}\nEdges:\n".format(len(self.mates), self.mates.keys())
         for (node, mates) in self.mates.items():
-            out += "{:s} -> {:s}\n".format(node, mates)
+            out += "{:d} -> {:s}\n".format(node, mates)
         return out
         

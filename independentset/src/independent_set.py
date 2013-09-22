@@ -8,7 +8,6 @@ import argparse
 from os.path import basename
 
 from algorithm import R0, R1, R2
-from node import Node
 from graph import Graph
 
 def read_datafile(filename):

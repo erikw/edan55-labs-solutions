@@ -14,7 +14,7 @@ def R0(graph, depth=-1):
 
     unconnected_node = graph.contains_unconnected_node()
     if unconnected_node: 
-        debug("Found unconnected {:s}. Returning 1 + G[V-nu].".format(unconnected_node), depth)
+        debug("Found unconnected {:d}. Returning 1 + G[V-nu].".format(unconnected_node), depth)
         graph.new_version()        
         graph.remove_node([unconnected_node])
         mis_size = 1 + R0(graph, depth)
@@ -22,7 +22,7 @@ def R0(graph, depth=-1):
         return mis_size
     else:
         max_deg_node = graph.maximum_degree()
-        debug("Max deg node is {:s}".format(max_deg_node), depth)
+        debug("Max deg node is {:d}".format(max_deg_node), depth)
    
         graph.new_version()
         graph.remove_node(graph.neighbourhood(max_deg_node))
