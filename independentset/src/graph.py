@@ -15,9 +15,15 @@ class Graph:
 
     def contains_unconnected_node(self):
         for node in self.nodes:
-            if node.neighbours_count(self._version) == 0:
+            if node.degree(self._version) == 0:
                 return node
         return None
+
+    def is_empty(self):
+        for node in self.nodes:
+            if node.exists_in(self._version):
+                return False
+        return True
 
 
     def remove_node(self, targets):
@@ -36,7 +42,7 @@ class Graph:
 
     def rewind_version(self):
         for node in self.nodes:
-            node.rewind(self._version)
+            node.rewind_version(self._version)
         if self._version is not 0:
             self._version -= 1
         

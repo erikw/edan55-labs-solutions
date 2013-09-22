@@ -13,8 +13,8 @@ def debug(text, depth):
 
 def R0(graph, depth=-1):
     depth += 1
-    debug("R0({:s})".format(graph.nodes), depth)
-    if len(graph.nodes) == 0:
+    debug("R0({:s})".format([x for x in graph.nodes if x.exists_in(graph._version)]), depth)
+    if graph.is_empty():
         debug("No nodes in input, returning 0", depth)
         return 0
 
