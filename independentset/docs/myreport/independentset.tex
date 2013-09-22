@@ -39,55 +39,8 @@ Algorithm R2 correctly computes $\alpha(G)$ because $[\ldots]$.
 
 \medskip
 \noindent
-\begin{tikzpicture}
-\begin{axis}[
-  height= 5cm,
-  xlabel=$n$,
-  ylabel={log recursive calls},
-  xmin = 20,  xmax = 150,
-  xtick =       {20,40,60,80,100,120},
-  xticklabels = { $20$, $40$, $60$, $80$, $100$, $120$},
-  x tick label as interval = false,
-  scaled ticks = false
-]
-    \addplot[color=black, mark=x] 
-	coordinates {
-	(30, 100)
-	(40, 200)
-	(50, 300)
-	(60, 400)
-    };
-    \addlegendentry{R0}
-
-    \addplot[color=black, mark=o] 
-	coordinates {
-	(30, 50)
-	(40, 100)
-	(50, 150)
-	(60, 200)
-	(70, 250)
-	(80, 300)
-	(90, 350)
-	(100, 400)
-    };
-    \addlegendentry{R1}
-
-    \addplot[color=black, mark=*] 
-	coordinates {
-	(30, 30)
-	(40, 60)
-	(50, 90)
-	(60, 120)
-	(70, 150)
-	(80, 180)
-	(90, 210)
-	(100, 240)
-	(110, 270)
-	(120, 300)
-    };
-    \addlegendentry{R2}
-\end{axis}
-\end{tikzpicture}
+\input{output.data}
+    
 
 The running times of algorithm~$R_0$, $R_1$, and $R_2$ appear to be
 $[\ldots],[\ldots],$ and $[\ldots]$, respectively..
