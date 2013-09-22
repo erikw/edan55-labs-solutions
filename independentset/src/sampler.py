@@ -11,6 +11,7 @@ from graph import Graph
 from independent_set import read_datafile
 
 data_path = '../data'
+
 files = {
 R0: ["g{:d}.in".format(x) for x in [4,30,40,50,60]],
 R1: ["g{:d}.in".format(x) for x in [4,30,40,50,60,70,80,90,100]],
@@ -97,8 +98,8 @@ def main():
         for size, nbr_calls in results[-1]['nbr_calls']:
             results[-1]['log_calls'].append((size, math.log(nbr_calls, 2)))
             #results[-1]['over_n_calls'].append(math.log(result[1], 2) / result[0])
-    #print_latex_file(results)
-    print(results)
+    print_latex_file(results)
+    #print(results)
 
 if __name__ == '__main__':
     sys.exit(main())
