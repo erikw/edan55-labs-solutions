@@ -53,9 +53,10 @@ def parse_args():
 
 def main():
     filename, algorithm = parse_args()
-    graph = read_datafile(filename)  
+    graph = read_datafile(filename)
+    algorithm.nbr_calls = 0 
     max_is = algorithm(graph)
-    print("The maximum number of independent nodes are {:d}".format(max_is))
+    print("The maximum number of independent nodes are {:d}\nNumber of calls to {:s} was {:d}\n".format(max_is, algorithm.__name__, algorithm.nbr_calls))
     return 0
 
 if __name__ == '__main__':

@@ -24,11 +24,12 @@ class Graph:
                 max_deg = len(mates)
         return max_node
 
-    def contains_unconnected_node(self):
+    def contains_node_deg(self, degree):
         for node, mates in self.mates.items():
-            if len(mates) == 0:
+            if len(mates) == degree:
                 return node
         return None
+
 
     def is_empty(self):
         return len(self.mates) == 0
