@@ -1,11 +1,5 @@
 import copy
-# TODO try fix
-#counts = [0, 0, 0]
-#def count_calls(count_index):
-#   def counter(alg_func, *args):
-#        counts[count_index] += 1
-#        alg_func(args)
-#    return counter
+# TODO count calls to R0
 
 def debug(text, depth):
     pass

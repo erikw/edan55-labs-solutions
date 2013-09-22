@@ -61,22 +61,7 @@ class Node:
             del self.exists[old_ver]
 
     def __str__(self):
-        return "node id: {:d} with neighbours {:s}".format(self.id, self.neighbours[self.last_mod_version])
+        return "node id: {:d}".format(self.id)
 
     def __repr__(self):
         return "node_id={:d}".format(self.id) 
-
-
-#def exist_decorator(real_fn):
-#   def exists_wrapper(self, *args, **kwargs):
-#       if self.exists[self.last_mod_version]:
-#            return self.real_fn(*args, **kwargs)
-#       else:
-#            print("DEBUG: called function on delted node")
-#            return 0
-#
-#   return exists_wrapper
-
-#for name, fn in inspect.getmembers(Node):
-#    if isinstance(fn, types.MethodType):
-#        setattr(Node, name, exist_decorator(fn))

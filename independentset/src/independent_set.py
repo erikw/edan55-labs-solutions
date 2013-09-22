@@ -18,28 +18,16 @@ def read_datafile(filename):
         print("Could not open file %s.".format(filename))
         sys.exit(2)
     nbr_nodes = int(filehandle.readline())
-    
+    graph = Graph()
     existing_nodes = {}
     for i in range(nbr_nodes):
-        node = get_or_create_node(i, existing_nodes)
         neighbours = [int(x) for x in filehandle.readline().split()]
         for j in range(nbr_nodes):
             if neighbours[j]:
-                neighbour_node = get_or_create_node(j, existing_nodes)
-                node.add_edge(neighbour_node)
-                neighbour_node.add_edge(node)
+                graph.add_edge(i, j)
     filehandle.close()
-
-    graph = Graph([x for x in existing_nodes.values()])
+    #print(graph)
     return graph
-
-def get_or_create_node(i, existing_nodes):
-    if i in existing_nodes.keys():
-        node = existing_nodes[i]
-    else:
-        node = Node(i)
-        existing_nodes[i] = node
-    return node
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Find a maximum independent set')
