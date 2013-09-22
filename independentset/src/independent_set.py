@@ -18,7 +18,7 @@ def read_datafile(filename):
         print("Could not open file %s.".format(filename))
         sys.exit(2)
     nbr_nodes = int(filehandle.readline())
-    graph = Graph()
+    graph = Graph(range(nbr_nodes))
     existing_nodes = {}
     for i in range(nbr_nodes):
         neighbours = [int(x) for x in filehandle.readline().split()]
@@ -26,7 +26,17 @@ def read_datafile(filename):
             if neighbours[j]:
                 graph.add_edge(i, j)
     filehandle.close()
-    #print(graph)
+#    print(graph)
+#   graph.new_version()
+#    graph.remove_node([graph.nodes[0]])
+#    print(graph)
+#    graph.rewind_version()
+#    print(graph)
+#    graph.new_version()
+#    graph.remove_node(graph.neighbourhood(graph.nodes[0]))
+#    print(graph)
+#    graph.rewind_version()
+#    print(graph)
     return graph
 
 def parse_args():

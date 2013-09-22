@@ -7,7 +7,7 @@ def debug(text, depth):
 
 def R0(graph, depth=-1):
     depth += 1
-    debug("R0({:s})".format([x for x in graph.nodes if x.exists_in(graph._version)]), depth)
+    debug("R0({:s})".format(graph.mates.keys()), depth)
     if graph.is_empty():
         debug("No nodes in input, returning 0", depth)
         return 0
@@ -23,16 +23,17 @@ def R0(graph, depth=-1):
     else:
         max_deg_node = graph.maximum_degree()
         debug("Max deg node is {:s}".format(max_deg_node), depth)
-
-        debug("a = Recursing on G[V-N(maxdegnode)]", depth)
+   
         graph.new_version()
         graph.remove_node(graph.neighbourhood(max_deg_node))
+        debug("a = Recursing on G[V-N(maxdegnode)]", depth)
         mis_a = 1 + R0(graph, depth)
         graph.rewind_version()
 
-        debug("b = Recursing on G[V-maxdegnode]", depth)
+        
         graph.new_version()
         graph.remove_node([max_deg_node])
+        debug("b = Recursing on G[V-maxdegnode]", depth)
         mis_b = R0(graph, depth)
         graph.rewind_version()
 
