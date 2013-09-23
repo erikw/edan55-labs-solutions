@@ -31,11 +31,20 @@ class Graph:
                 max_deg = len(mates)
         return max_node
 
+    def size(self):
+        return len(self.mates)
+
     def contains_node_deg(self, degree):
         for node, mates in self.mates.items():
             if len(mates) == degree:
                 return node
         return None
+
+    def is_disconnected(self):
+        for node, mates in self.mates.items():
+            if len(mates) is not 0:
+                return False
+        return True
 
     def is_empty(self):
         return len(self.mates) == 0
