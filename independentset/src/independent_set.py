@@ -7,7 +7,7 @@ import sys
 import argparse
 from os.path import basename
 
-from algorithm import R0, R1, R2, R3
+from algorithm import R0, R1, R2, R3, R4
 from graph import Graph
 
 def read_datafile(filename):
@@ -40,7 +40,7 @@ def read_datafile(filename):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Find a maximum independent set')
-    parser.add_argument('-a', '--algorithm', choices=['R0', 'R1', 'R2', 'R3'], action='store', default='R0', help="The algoritm to use.")
+    parser.add_argument('-a', '--algorithm', choices=['R0', 'R1', 'R2', 'R3', 'R4'], action='store', default='R0', help="The algoritm to use.")
     parser.add_argument('filename', nargs='?', default='../data/g4.in', help="File name to read graph from.")
     args = parser.parse_args()
 
@@ -48,7 +48,8 @@ def parse_args():
             'R0' : R0,
             'R1' : R1,
             'R2' : R2,
-            'R3' : R3
+            'R3' : R3,
+            'R4' : R4
             }[args.algorithm]
     return args.filename, alg_func
 
