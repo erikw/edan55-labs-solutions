@@ -28,10 +28,12 @@
 by Erik Westrup and Dmitry Basavin
 
 \subsection{Correctness}
-Algorithm R1 correctly computes $\alpha(G)$ because $[\ldots]$.
+Algorithm R1 correctly computes $\alpha(G)$ because putting a node of degree 1 in the MIS is no worse than putting his neighbor in the MIS. This is because the neighbours could have more than one neighbour, thus putting it in the MIS could potentially block more verticies from being placed in the MIS. % TODO show graph with 3 nodes.
 
 \noindent
-Algorithm R2 correctly computes $\alpha(G)$ because $[\ldots]$.
+Algorithm R2 correctly computes $\alpha(G)$. In the first case when the cilque of size 3 is detected, then there is no way of picking a MIS greater than 1. Thus one of the vertices are accounted for and we recurse on G without this clique.
+
+In the second case in the original graph G there are two options: 1) pick v, or 2) pick u and w. This corresponds, in the modified graph, to 1) picking all the grandchildren of v in G, and  2) picking z in the modified graph. This we can return 1 + recursion on the modified graph.
 
 \subsection{Empirical Running time}
 
@@ -42,8 +44,8 @@ Algorithm R2 correctly computes $\alpha(G)$ because $[\ldots]$.
 \input{output.data}
     
 
-The running times of algorithm~$R_0$, $R_1$, and $R_2$ appear to be
-$[\ldots],[\ldots],$ and $[\ldots]$, respectively..
+The running times of algorithm (measured in the number of recursions, assuming $o(c^n)$, then c=log\_n(nbr\_calls)) ~$R_0$, $R_1$, and $R_2$ appear to be
+$O(0.065^n)$ , $O(0.038^n)$, and $O(0.031^n)$, respectively..
 
 \subsection{Theoretical Upper Bound}
 
@@ -56,17 +58,22 @@ T_0(n) &\leq\max(T_0(n-1), T_0(n-1)+T_0(n-1-d_{\mbox{max}})) \\ &\leq T_0(n-1)+T
 with $d_{\mbox{max}}$ the degree of the vertex we branch on. The hard part is the one when there are no isolated vertices, in which case the vertex $u$ we are branching on has at least one neighbor. 
 
 For R1 we have that
- \[
- T_1(n)=[\ldots]
- \]
+\begin{align*}
+	T_1(n) &\leq\max(T_1(n-1), T_1(n-2), T_1(n-1)+T_1(n-1-d_{\mbox{max}})) \\ &\leq T_1(n-1)+T_1(n-3)
+\end{align*}
+
+because we remove two nodes in the new case, and the last case always have $d_{max} \geq 2$.
 
 For R2 we have that
- \[
- T_2(n)=[\ldots]
- \]
+\begin{align*}
+	T_2(n) &\leq\max(T_2(n-1), T_2(n-2), T_2(n-2), T_2(n-3), T_2(n-1)+T_2(n-1-d_{\mbox{max}})) \\ &\leq T_2(n-1)+T_2(n-4)
+\end{align*}
+because we remove either 3 or 2  nodes in the new case, and the last case always have $d_{max} \geq 3$.
+
+
 \paragraph{Worst Case Upper Bound}
 The running times of algorithm~$R_0$, $R_1$, and $R_2$ are in
-$[\ldots],[\ldots],$ and $[\ldots]$, respectively. \newpage
+$O((\frac{1+\sqrt(5)}{2})^n)=O(1.618^n)$ , $O(1.465^n)$, and $O(1.38^n)$, respectively. \newpage
 
 \section{Optional}
 Add more ``algorithmic intelligence'' to the algorithm $R_2$ in order to tackle the instance in data/g130.in.
