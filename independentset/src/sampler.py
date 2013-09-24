@@ -96,7 +96,7 @@ def main():
         results[-1]['log_calls'] = list()
         #results[-1]['over_n_calls'] = list()
         for size, nbr_calls in results[-1]['nbr_calls']:
-            results[-1]['log_calls'].append((size, math.log(nbr_calls, 2)))
+            results[-1]['log_calls'].append((size, math.log(nbr_calls)))
             #results[-1]['over_n_calls'].append(math.log(result[1], 2) / result[0])
     print_latex_file(results)
     #print(results)

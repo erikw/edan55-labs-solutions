@@ -28,7 +28,7 @@
 by Erik Westrup and Dmitry Basavin
 
 \subsection{Correctness}
-Algorithm R1 correctly computes $\alpha(G)$ because putting a node of degree 1 in the MIS is no worse than putting his neighbor in the MIS. This is because the neighbours could have more than one neighbour, thus putting it in the MIS could potentially block more verticies from being placed in the MIS. % TODO show graph with 3 nodes.
+Algorithm R1 correctly computes $\alpha(G)$ because putting a node of degree 1 in the MIS is no worse than putting his neighbor in the MIS. This is because the neighbours could have more than one neighbour, thus putting it in the MIS could potentially block more verticies from being placed in the MIS.
 
 \noindent
 Algorithm R2 correctly computes $\alpha(G)$. In the first case when the cilque of size 3 is detected, then there is no way of picking a MIS greater than 1. Thus one of the vertices are accounted for and we recurse on G without this clique.
