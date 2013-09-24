@@ -1,0 +1,56 @@
+
+\begin{tikzpicture}
+\begin{axis}[
+  height= 5cm,
+  xlabel=$n$,
+  ylabel={log recursive calls},
+  xmin = 20,  xmax = 150,
+  xtick =       {20,40,60,80,100,120},
+  xticklabels = { $20$, $40$, $60$, $80$, $100$, $120$},
+  x tick label as interval = false,
+  scaled ticks = false
+]
+    \addplot[color=black, mark=x] 
+	coordinates {
+	(4, 2.079442)
+	(30, 9.864383)
+	(40, 11.971350)
+	(50, 13.870857)
+	(60, 15.989801)
+
+};
+    \addlegendentry{R0}
+
+    \addplot[color=black, mark=o] 
+	coordinates {
+	(4, 1.791759)
+	(30, 4.795791)
+	(40, 7.274480)
+	(50, 8.649799)
+	(60, 10.403839)
+	(70, 11.827722)
+	(80, 13.262157)
+	(90, 14.477938)
+	(100, 15.903118)
+
+};
+    \addlegendentry{R1}
+
+    \addplot[color=black, mark=*] 
+	coordinates {
+	(4, 1.098612)
+	(30, 3.496508)
+	(40, 5.375278)
+	(50, 6.982863)
+	(60, 8.706656)
+	(70, 9.991224)
+	(80, 11.375375)
+	(90, 12.477724)
+	(100, 13.826046)
+	(110, 14.931695)
+	(120, 15.994071)
+
+};
+    \addlegendentry{R2}
+\end{axis}
+\end{tikzpicture}
