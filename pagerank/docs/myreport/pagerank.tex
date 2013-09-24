@@ -1,0 +1,100 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.5.1}
+
+\newtheorem{claim}{Claim}[section]
+\title{\sf Pagerank}
+%\date{\GITAuthorDate}
+%\author{Thore Husfeldt}
+
+\begin{document}
+\maketitle
+
+\section{Pagerank Lab Report}
+
+by Erik Westrup \& Dmitry Basavin
+
+\subsection{Transition probabilities}
+
+The transition matrix for the graph described in three.txt
+is\ldots
+\begin{equation*}
+P = 
+\left(
+\begin{array}{cccc}
+1 & 6 & \pi & 1\\
+1 & 1/e & -2  & \cdots\\
+1 & 1 & 0 \\
+\vdots
+\end{array}
+\right)\,,
+\end{equation*}
+and its 10th power is
+\begin{equation*}
+P^{10} = 
+\left(
+\begin{array}{cccc}
+1 & \cdots\\
+\vdots
+\end{array}
+\right)\,.
+\end{equation*}
+
+The transition matrix $P$ can be broken down into  $P = \alpha(H + D)
++ \frac{1-\alpha}{n} \bf 1$, where $H =[\ldots]$ and $D =[\ldots]$.
+
+\subsection{Results}
+
+The following table gives the top hits, i.e., the 5 first vertices of
+each graph sorted by page rank, using $\alpha = \frac{85}{100}$.
+
+\medskip
+\begin{fullwidth}
+\small
+\begin{tabular}{lcccccccccc}
+three.txt & 2 (36.6\%) & 1 (27.5\%) & 0 (18.4\%) & 3 (17.3\%) \\
+tiny.txt & [\ldots] &\\
+medium.txt &\\
+wikipedia.txt & \\
+p2p-Gnutella08-mod.txt &
+\end{tabular}
+\end{fullwidth}
+
+\bigskip The following table gives the number of random walk steps and
+(scalar) multiplications needed for each graph until the results were
+stable to within 2 decimal places.
+
+\medskip
+\begin{fullwidth}
+\small
+\begin{tabular}{lcccccccccc}
+Graph & \# transitions  & \# multiplications \\
+three.txt & 54,325 \\
+tiny.txt &\\
+medium.txt &\\
+wikipedia.txt & \\
+p2p-Gnutella08-mod.txt
+\end{tabular}
+\end{fullwidth}
+
+\subsection{Optional}
+
+Build a time machine, fly back to the early 1990s.
+Start a search engine company based on this idea.
+
+
+\section{Perspective}
+
+For more thorough introduction to the mathematics
+  behind this model, see David Austin, \emph{How Google Finds Your Needle in
+  the Web's Haystack}, American Mathematical Society Feature Column,
+  2006.
+
+The original paper is Sergey Brin, Lawrence Page, \emph{The anatomy of a
+large-scale hypertextual Web search engine}, which also mentions a
+bit about the data structure used for storing web page content.
+A different model for establishing web page relevance was established
+by Kleinberg around the same time as PageRank.
+\end{document}
