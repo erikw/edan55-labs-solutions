@@ -83,12 +83,14 @@ def q_iterations(adj_dict, nbr_iterations):
     for i in range(int(r)):
         Q *= Q
 
-    return p*Q
+
+    final_distribution = p*Q
+    return {i:final_distribution[0,i] for i in range(len(adj_dict))}
 
 
 
-def print_freqs(freqs):
-    print("Node\tRelFreq")
+def print_freqs(freqs, method):
+    print("Method #{:d}\nNode\tRelFreq".format(method))
     for node in freqs.keys():
         print("{:d}\t{:f}".format(node, freqs[node]))
 
@@ -99,11 +101,9 @@ def main():
     adj_dict = read_datafile(filename) # nodeid -> set(nodeids)
     if method is 1:
         rel_freqs = page_rank(adj_dict, nbr_iterations)
-        print_freqs(rel_freqs)
     elif method is 2:
-        final_distribution = q_iterations(adj_dict, nbr_iterations)        
-        print(final_distribution) 
-    
+        rel_freqs = q_iterations(adj_dict, nbr_iterations)        
+    print_freqs(rel_freqs, method)
     return 0
 
 if __name__ == '__main__':
