@@ -16,9 +16,8 @@ def read_datafile(filename):
         print("Could not open file %s.".format(filename))
         sys.exit(2)
     nbr_nodes = int(filehandle.readline())
-    adj_dict = {}
+    adj_dict = {x:[] for x in range(nbr_nodes)}
     for i in range(nbr_nodes):
-        adj_dict[i] = list() 
         pairs = [int(x) for x in filehandle.readline().split()]
         for i in range(0, len(pairs), 2):
             a = pairs[i];
@@ -52,11 +51,16 @@ def page_rank(adj_dict, nbr_iterations):
         freqs[node] /= nbr_iterations
     return freqs
 
+def print_freqs(freqs):
+    print("Node\tRelFreq")
+    for node in freqs.keys():
+        print("{:d}\t{:f}".format(node, freqs[node]))
+
 def main():
     nbr_iterations, filename = parse_args()
     adj_dict = read_datafile(filename) # nodeid -> set(nodeids)
     rel_freqs = page_rank(adj_dict, nbr_iterations)
-    print(rel_freqs)
+    print_freqs(rel_freqs)
     return 0
 
 if __name__ == '__main__':
