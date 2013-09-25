@@ -6,6 +6,9 @@ __author__ = "Erik Westrup, Dmitry Basavin"
 import sys
 import argparse
 import random
+import math
+
+import numpy
 
 ALPHA = 85/100
 
@@ -30,9 +33,16 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Do the google page rank.')
     parser.add_argument('-n', '--nbr-iterations', type=int, required=True, help='Number of iterations.')
     parser.add_argument('filename', nargs='?', default='../data/three.txt', help="File name to read graph from.")
+    parser.add_argument('-m', '--method', type=int, choices=[1,2,3], default=1, help="What method to use.")    
     args = parser.parse_args()
 
-    return args.nbr_iterations, args.filename
+    if args.method == 2 and not power_of_two(args.nbr_iterations):
+        print("The numbe of iterations for the second method should be a pwoer of 2")            
+        sys.exit(2)
+    return args.nbr_iterations, args.filename, args.method
+
+def power_of_two(number):
+    return math.log(number,2).is_integer()
 
 
 def page_rank(adj_dict, nbr_iterations):
@@ -51,16 +61,49 @@ def page_rank(adj_dict, nbr_iterations):
         freqs[node] /= nbr_iterations
     return freqs
 
+def build_matrix(adj_dict):
+    P = numpy.mat(numpy.zeros(shape=(len(adj_dict),len(adj_dict))))
+
+    for node in adj_dict.keys():
+        for mate in adj_dict[node]:
+            P[node, mate] += ALPHA/len(adj_dict[node])
+        if len(adj_dict[node]) == 0:
+            remain_prob = 1
+        else:
+            remain_prob = (1-ALPHA)
+        for other_node in range(len(adj_dict)):
+            if other_node is not node:
+                P[node, other_node] += remain_prob/(len(adj_dict) - 1)
+    return P
+
+def q_iterations(adj_dict, nbr_iterations):
+    Q = build_matrix(adj_dict)
+    p = numpy.array([1] + [0 for x in range(len(adj_dict) - 1)])
+    r = math.log(nbr_iterations, 2)
+    for i in range(int(r)):
+        Q *= Q
+
+    return p*Q
+
+
+
 def print_freqs(freqs):
     print("Node\tRelFreq")
     for node in freqs.keys():
         print("{:d}\t{:f}".format(node, freqs[node]))
 
+
+
 def main():
-    nbr_iterations, filename = parse_args()
+    nbr_iterations, filename, method = parse_args()
     adj_dict = read_datafile(filename) # nodeid -> set(nodeids)
-    rel_freqs = page_rank(adj_dict, nbr_iterations)
-    print_freqs(rel_freqs)
+    if method is 1:
+        rel_freqs = page_rank(adj_dict, nbr_iterations)
+        print_freqs(rel_freqs)
+    elif method is 2:
+        final_distribution = q_iterations(adj_dict, nbr_iterations)        
+        print(final_distribution) 
+    
     return 0
 
 if __name__ == '__main__':
