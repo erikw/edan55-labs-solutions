@@ -59,7 +59,6 @@ def page_rank(adj_dict, nbr_iterations):
             cur_node = random.choice(adj_dict[cur_node])        
         else:
             nodes = list(range(len(adj_dict)))
-            nodes.remove(cur_node)
             cur_node = random.choice(nodes)
     for node in freqs.keys():
         freqs[node] /= nbr_iterations
@@ -76,20 +75,26 @@ def build_matrix(adj_dict):
         else:
             remain_prob = (1-ALPHA)
         for other_node in range(len(adj_dict)):
-            if other_node is not node:
-                P[node, other_node] += remain_prob/(len(adj_dict) - 1)
+            P[node, other_node] += remain_prob/(len(adj_dict) - 0)
     return P
 
 def q_iterations(adj_dict, nbr_iterations):
     Q = build_matrix(adj_dict)
+    #p_to_the(Q, 10)
     p = numpy.array([1] + [0 for x in range(len(adj_dict) - 1)])
     r = math.log(nbr_iterations, 2)
     for i in range(int(r)):
         Q *= Q
 
-
     final_distribution = p*Q
     return {i:final_distribution[0,i] for i in range(len(adj_dict))}
+
+def p_to_the(P, number):
+    Po = P.copy()
+    for i in range(number):
+        Po *= P
+    print(Po) 
+
 
 def build_static_matrices(adj_dict):
     num_nodes = len(adj_dict)
@@ -98,13 +103,16 @@ def build_static_matrices(adj_dict):
         deg = len(adj_dict[node])
         for neighbour in adj_dict[node]:
             H[node, neighbour] += 1/deg
-    #D = scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    Do = scipy.sparse.lil_matrix((num_nodes, num_nodes))
     D = [0 for x in range(num_nodes)]  
+
     for node in adj_dict.keys():
         deg = len(adj_dict[node])
         if deg == 0:
             D[node] = 1/num_nodes
-    return H,D
+            for neighbour in range(len(adj_dict)):            
+                Do[node, neighbour] = 1/num_nodes
+    return H,D,Do
 		
 def mul_vector_matrix(vector, M):
     val = sum([a*b for a,b in zip(vector, M)])
@@ -112,7 +120,19 @@ def mul_vector_matrix(vector, M):
     return res
 
 def dh_iterations(adj_dict, nbr_iterations):
-    H, D = build_static_matrices(adj_dict)
+    H, D, Do = build_static_matrices(adj_dict)
+
+    # Formular verification.
+    #num_nodes = len(adj_dict)
+    #p = numpy.array([1] + [0 for x in range(num_nodes - 1)])
+    #P = build_matrix(adj_dict)
+    #ones = numpy.mat(numpy.ones(shape=(len(adj_dict),len(adj_dict))))
+    #Ptest  = ALPHA * (H + Do) + ((1-ALPHA)/len(adj_dict)) * p * ones
+    #print(P)
+    #print(Ptest)
+
+    #print(H)
+    #print(D)
     num_nodes = len(adj_dict)
     p = numpy.array([1] + [0 for x in range(num_nodes - 1)])
 	
@@ -144,7 +164,12 @@ def main():
     elif method is 3:    
         rel_freqs = dh_iterations(adj_dict, nbr_iterations)    
     print_freqs(rel_freqs, method)
-    print(most_frequent(rel_freqs, 5))
+
+    most_freq = most_frequent(rel_freqs, 5)
+    for node, freq in most_freq:
+        print("{:d} ({:f}\%)  ".format(node, freq * 100), end='')   
+
+    print("")
     return 0
 
 if __name__ == '__main__':
