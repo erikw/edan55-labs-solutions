@@ -9,6 +9,7 @@ import random
 import math
 
 import numpy
+import scipy.sparse
 
 ALPHA = 85/100
 
@@ -87,6 +88,36 @@ def q_iterations(adj_dict, nbr_iterations):
     final_distribution = p*Q
     return {i:final_distribution[0,i] for i in range(len(adj_dict))}
 
+def build_static_matrices(adj_dict):
+    num_nodes = len(adj_dict)
+    H =  scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    for node in adj_dict.keys():
+        deg = len(adj_dict[node])
+        for neighbour in adj_dict[node]:
+            H[node, neighbour] += 1/deg
+    D = scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    for node in adj_dict.keys():
+        deg = len(adj_dict[node])
+        if deg == 0:
+            for neighbour in range(num_nodes):
+                D[node, neighbour] = 1/num_nodes
+    return H,D
+		
+
+def dh_iterations(adj_dict, nbr_iterations):
+    H, D = build_static_matrices(adj_dict)
+    num_nodes = len(adj_dict)
+    p = numpy.array([1] + [0 for x in range(num_nodes - 1)])
+	
+    for i in range(nbr_iterations):
+        alpha_p = ALPHA * p
+        p1_elem = (1-ALPHA) * sum(p) / num_nodes
+        p1 = numpy.array([ p1_elem for i in range(num_nodes)])
+
+        p = alpha_p * H + alpha_p * D + p1
+		
+    return {i : p[i] for i in range(len(adj_dict))}
+
 
 
 def print_freqs(freqs, method):
@@ -98,11 +129,13 @@ def print_freqs(freqs, method):
 
 def main():
     nbr_iterations, filename, method = parse_args()
-    adj_dict = read_datafile(filename) # nodeid -> set(nodeids)
+    adj_dict = read_datafile(filename) # nodeid -> list(nodeids)
     if method is 1:
         rel_freqs = page_rank(adj_dict, nbr_iterations)
     elif method is 2:
-        rel_freqs = q_iterations(adj_dict, nbr_iterations)        
+        rel_freqs = q_iterations(adj_dict, nbr_iterations)
+    elif method is 3:    
+        rel_freqs = dh_iterations(adj_dict, nbr_iterations)    
     print_freqs(rel_freqs, method)
     return 0
 
