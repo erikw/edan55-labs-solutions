@@ -9,6 +9,8 @@ import operator
 import numpy
 import scipy.sparse
 
+ALPHA = 85/100
+
 def build_matrix(adj_dict):
     P = numpy.mat(numpy.zeros(shape=(len(adj_dict),len(adj_dict))))
 
@@ -32,16 +34,17 @@ def build_static_matrices(adj_dict):
         deg = len(adj_dict[node])
         for neighbour in adj_dict[node]:
             H[node, neighbour] += 1/deg
-    Do = scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    #Do = scipy.sparse.lil_matrix((num_nodes, num_nodes))
     D = [0 for x in range(num_nodes)]  
 
     for node in adj_dict.keys():
         deg = len(adj_dict[node])
         if deg == 0:
             D[node] = 1/num_nodes
-            for neighbour in range(len(adj_dict)):            
-                Do[node, neighbour] = 1/num_nodes
-    return H,D,Do
+            #for neighbour in range(len(adj_dict)):            
+               # Do[node, neighbour] = 1/num_nodes
+    return H,D
+    #return H,D,Do
 	
 
 	

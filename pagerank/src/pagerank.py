@@ -8,13 +8,13 @@ import argparse
 import random
 import math
 import operator
+import copy
 
 import numpy
 import scipy.sparse
 
 from matrices import *
 
-ALPHA = 85/100
 
 def read_datafile(filename):
     try:
@@ -37,7 +37,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Do the google page rank.')
     parser.add_argument('-n', '--nbr-iterations', type=int, required=True, help='Number of iterations.')
     parser.add_argument('filename', nargs='?', default='../data/three.txt', help="File name to read graph from.")
-    parser.add_argument('-m', '--method', type=int, choices=[1,2,3], default=1, help="What method to use.")    
+    parser.add_argument('-m', '--method', type=int, choices=[1,11,2,3], default=1, help="What method to use.")    
     args = parser.parse_args()
 
     if args.method == 2 and not power_of_two(args.nbr_iterations):
@@ -65,10 +65,58 @@ def page_rank(adj_dict, nbr_iterations):
     return freqs
 
 
+diff_dict = {}
+
+def check_instability(freqs, prev_freqs, count):
+    global diff_dict
+    if count in [0,1]:
+        if count == 0:
+             diff_dict = {i:sys.maxsize for i in range(len(freqs))}
+        return True
+    for node in freqs.keys():
+        cur = int(freqs[node]/count * 100)
+        prev = int(prev_freqs[node]/(count-1) * 100)
+        #print("diff = {:d}".format(cur - prev))
+        cur_diff = abs(freqs[node]/count - prev_freqs[node]/(count-1))
+        #print(cur_diff)
+        #print(diff_dict[node] - cur_diff)
+        #if (cur != prev) and ((cur_diff - diff_dict[node] > 0)):
+        if not ((cur == prev) and (diff_dict[node] - cur_diff > 0)):
+            diff_dict[node] = cur_diff
+            return True
+        else:
+            diff_dict[node] = cur_diff
+
+    return False
+
+
+def page_rank_stable(adj_dict, nbr_iterations):
+    cur_node = 0
+    freqs = {x:0 for x in range(len(adj_dict))} # nodeid -> visit frequency
+    count = 0
+    unstable = True
+    prev_freqs = copy.deepcopy(freqs)
+    while unstable:
+        freqs[cur_node] +=1
+        flip = random.random()
+        if flip <= ALPHA and adj_dict[cur_node]:
+            cur_node = random.choice(adj_dict[cur_node])        
+        else:
+            nodes = list(range(len(adj_dict)))
+            cur_node = random.choice(nodes)
+        unstable = check_instability(freqs, prev_freqs, count)
+        prev_freqs = copy.deepcopy(freqs)
+        count += 1
+
+    for node in freqs.keys():
+        freqs[node] /= count
+    return freqs, count
+
+
 
 def q_iterations(adj_dict, nbr_iterations):
     Q = build_matrix(adj_dict)
-    #p_to_the(Q, 10)
+    p_to_the(Q, 10)
     p = numpy.array([1] + [0 for x in range(len(adj_dict) - 1)])
     r = math.log(nbr_iterations, 2)
     for i in range(int(r)):
@@ -79,7 +127,7 @@ def q_iterations(adj_dict, nbr_iterations):
 
 def p_to_the(P, number):
     Po = P.copy()
-    for i in range(number):
+    for i in range(number - 1):
         Po *= P
     print(Po) 
 
@@ -87,7 +135,8 @@ def p_to_the(P, number):
 
 
 def dh_iterations(adj_dict, nbr_iterations):
-    H, D, Do = build_static_matrices(adj_dict)
+    H, D  = build_static_matrices(adj_dict)
+    #H, D, Do = build_static_matrices(adj_dict)
 
     # Formular verification.
     #num_nodes = len(adj_dict)
@@ -100,6 +149,8 @@ def dh_iterations(adj_dict, nbr_iterations):
 
     #print(H)
     #print(D)
+
+
     num_nodes = len(adj_dict)
     p = numpy.array([1] + [0 for x in range(num_nodes - 1)])
 	
@@ -126,6 +177,9 @@ def main():
     adj_dict = read_datafile(filename) # nodeid -> list(nodeids)
     if method is 1:
         rel_freqs = page_rank(adj_dict, nbr_iterations)
+    elif method is 11:
+        rel_freqs, count = page_rank_stable(adj_dict, nbr_iterations)
+        print("Count is {:d}".format(count))
     elif method is 2:
         rel_freqs = q_iterations(adj_dict, nbr_iterations)
     elif method is 3:    
@@ -134,7 +188,7 @@ def main():
 
     most_freq = most_frequent(rel_freqs, 5)
     for node, freq in most_freq:
-        print("{:d} ({:f}\%)  ".format(node, freq * 100), end='')   
+        print("{:d} ({:f}\%)  &".format(node, freq * 100), end='')   
 
     print("")
     return 0
