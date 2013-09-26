@@ -24,10 +24,10 @@ is\ldots
 P = 
 \left(
 \begin{array}{cccc}
-1 & 6 & \pi & 1\\
-1 & 1/e & -2  & \cdots\\
-1 & 1 & 0 \\
-\vdots
+0.          & 0.61666667  & 0.33333333  & 0.05\\
+0.05        & 0.          & 0.9         & 0.05\\
+0.33333333  & 0.33333333  & 0.          & 0.33333333\\
+0.33333333  & 0.33333333  & 0.33333333  & 0.
 \end{array}
 \right)\,,
 \end{equation*}
@@ -36,25 +36,54 @@ and its 10th power is
 P^{10} = 
 \left(
 \begin{array}{cccc}
-1 & \cdots\\
-\vdots
+0.18839185  & 0.29012249  & 0.37320924  & 0.14827642\\
+0.18829185  & 0.28999904  & 0.37342054  & 0.14828858\\
+0.18840358  & 0.29001076  & 0.37319144  & 0.14839423\\
+0.18840358  & 0.29001076  & 0.37319708  & 0.14838858\\
 \end{array}
 \right)\,.
 \end{equation*}
 
 The transition matrix $P$ can be broken down into  $P = \alpha(H + D)
-+ \frac{1-\alpha}{n} \bf 1$, where $H =[\ldots]$ and $D =[\ldots]$.
++ \frac{1-\alpha}{n} \bf 1$, where 
+
+\begin{equation*}
+H =
+\left(
+\begin{array}{cccc}
+0 & 0.666666666667 & 0.333333333333 & 0 \\
+0 & 0 & 1.0 & 0 \\
+0.333333333333 & 0.333333333333 & 0 & 0.333333333333 \\
+0 & 0 & 0 & 0
+\end{array}
+\right)\,,
+\end{equation*}
+
+\begin{equation*}
+D =
+\left(
+\begin{array}{cccc}
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.25 & 0.25 & 0.25 & 0.25 \\
+\end{array}
+\right)\,.
+\end{equation*}
 
 \subsection{Results}
 
 The following table gives the top hits, i.e., the 5 first vertices of
 each graph sorted by page rank, using $\alpha = \frac{85}{100}$.
 
+
+
 \medskip
 \begin{fullwidth}
 \small
 \begin{tabular}{lcccccccccc}
 three.txt & 2 (36.6\%) & 1 (27.5\%) & 0 (18.4\%) & 3 (17.3\%) \\
+three.txt & 2 (36.358721\%)1 (27.954581\%)0 (17.843349\%)3 (17.843349\%)
 tiny.txt & [\ldots] &\\
 medium.txt &\\
 wikipedia.txt & \\
