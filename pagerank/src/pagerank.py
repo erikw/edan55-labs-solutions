@@ -7,6 +7,9 @@ import sys
 import argparse
 import random
 import math
+import operator
+
+
 
 import numpy
 import scipy.sparse
@@ -95,14 +98,18 @@ def build_static_matrices(adj_dict):
         deg = len(adj_dict[node])
         for neighbour in adj_dict[node]:
             H[node, neighbour] += 1/deg
-    D = scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    #D = scipy.sparse.lil_matrix((num_nodes, num_nodes))
+    D = [0 for x in range(num_nodes)]  
     for node in adj_dict.keys():
         deg = len(adj_dict[node])
         if deg == 0:
-            for neighbour in range(num_nodes):
-                D[node, neighbour] = 1/num_nodes
+            D[node] = 1/num_nodes
     return H,D
 		
+def mul_vector_matrix(vector, M):
+    val = sum([a*b for a,b in zip(vector, M)])
+    res = numpy.array([val for x in range(len(M))])
+    return res
 
 def dh_iterations(adj_dict, nbr_iterations):
     H, D = build_static_matrices(adj_dict)
@@ -113,8 +120,7 @@ def dh_iterations(adj_dict, nbr_iterations):
         alpha_p = ALPHA * p
         p1_elem = (1-ALPHA) * sum(p) / num_nodes
         p1 = numpy.array([ p1_elem for i in range(num_nodes)])
-
-        p = alpha_p * H + alpha_p * D + p1
+        p = alpha_p * H + mul_vector_matrix(alpha_p, D) + p1
 		
     return {i : p[i] for i in range(len(adj_dict))}
 
@@ -125,7 +131,8 @@ def print_freqs(freqs, method):
     for node in freqs.keys():
         print("{:d}\t{:f}".format(node, freqs[node]))
 
-
+def most_frequent(freqs, number):
+    return sorted(freqs.items(), key=operator.itemgetter(1), reverse=True)[0:number]
 
 def main():
     nbr_iterations, filename, method = parse_args()
@@ -137,6 +144,7 @@ def main():
     elif method is 3:    
         rel_freqs = dh_iterations(adj_dict, nbr_iterations)    
     print_freqs(rel_freqs, method)
+    print(most_frequent(rel_freqs, 5))
     return 0
 
 if __name__ == '__main__':
