@@ -54,66 +54,49 @@ def page_rank(adj_dict, nbr_iterations):
     freqs = {x:0 for x in range(len(adj_dict))} # nodeid -> visit frequency
     for itr in range(nbr_iterations):
         freqs[cur_node] +=1
-        flip = random.random()
-        if flip <= ALPHA and adj_dict[cur_node]:
-            cur_node = random.choice(adj_dict[cur_node])        
-        else:
-            nodes = list(range(len(adj_dict)))
-            cur_node = random.choice(nodes)
+        cur_node = next_node(adj_dict, cur_node)
     for node in freqs.keys():
         freqs[node] /= nbr_iterations
     return freqs
 
 
-diff_dict = {}
-
-def check_instability(freqs, prev_freqs, count):
-    global diff_dict
-    if count in [0,1]:
-        if count == 0:
-             diff_dict = {i:sys.maxsize for i in range(len(freqs))}
-        return True
-    for node in freqs.keys():
-        cur = int(freqs[node]/count * 100)
-        prev = int(prev_freqs[node]/(count-1) * 100)
-        #print("diff = {:d}".format(cur - prev))
-        cur_diff = abs(freqs[node]/count - prev_freqs[node]/(count-1))
-        #print(cur_diff)
-        #print(diff_dict[node] - cur_diff)
-        #if (cur != prev) and ((cur_diff - diff_dict[node] > 0)):
-        if not ((cur == prev) and (diff_dict[node] - cur_diff > 0)):
-            diff_dict[node] = cur_diff
-            return True
-        else:
-            diff_dict[node] = cur_diff
-
-    return False
-
-
 def page_rank_stable(adj_dict, nbr_iterations):
     cur_node = 0
     freqs = {x:0 for x in range(len(adj_dict))} # nodeid -> visit frequency
-    count = 0
+    freqs[cur_node] +=1
+    count = 1
     unstable = True
-    prev_freqs = copy.deepcopy(freqs)
     while unstable:
-        freqs[cur_node] +=1
-        flip = random.random()
-        if flip <= ALPHA and adj_dict[cur_node]:
-            cur_node = random.choice(adj_dict[cur_node])        
-        else:
-            nodes = list(range(len(adj_dict)))
-            cur_node = random.choice(nodes)
-        unstable = check_instability(freqs, prev_freqs, count)
+        cur_node = next_node(adj_dict, cur_node)
         prev_freqs = copy.deepcopy(freqs)
-        count += 1
-
+        freqs[cur_node] +=1
+        count +=1
+        unstable = is_unstable(freqs, prev_freqs, count)
+        #for node in freqs.keys():
+        #    print("{:d} ({:f}\%)  &".format(node, freqs[node] / count), end='')  
+        #print("")
     for node in freqs.keys():
         freqs[node] /= count
     return freqs, count
 
-
-
+def is_unstable(freqs, prev_freqs, count):
+    for node in freqs.keys():
+        # use 3 decimal places to determine stability
+        cur = int(freqs[node]/count * 1000)
+        prev = int(prev_freqs[node]/(count-1) * 1000)
+        if not cur == prev:
+            return True
+    return False
+    
+def next_node(adj_dict, cur_node):
+    flip = random.random()
+    if flip <= ALPHA and adj_dict[cur_node]:
+        next_node = random.choice(adj_dict[cur_node])        
+    else:
+        nodes = list(range(len(adj_dict)))
+        next_node = random.choice(nodes)
+    return next_node
+    
 def q_iterations(adj_dict, nbr_iterations):
     Q = build_matrix(adj_dict)
     p_to_the(Q, 10)
@@ -121,7 +104,6 @@ def q_iterations(adj_dict, nbr_iterations):
     r = math.log(nbr_iterations, 2)
     for i in range(int(r)):
         Q *= Q
-
     final_distribution = p*Q
     return {i:final_distribution[0,i] for i in range(len(adj_dict))}
 
@@ -130,9 +112,6 @@ def p_to_the(P, number):
     for i in range(number - 1):
         Po *= P
     print(Po) 
-
-
-
 
 def dh_iterations(adj_dict, nbr_iterations):
     H, D  = build_static_matrices(adj_dict)
@@ -161,8 +140,6 @@ def dh_iterations(adj_dict, nbr_iterations):
         p = alpha_p * H + mul_vector_matrix(alpha_p, D) + p1
 		
     return {i : p[i] for i in range(len(adj_dict))}
-
-
 
 def print_freqs(freqs, method):
     print("Method #{:d}\nNode\tRelFreq".format(method))
