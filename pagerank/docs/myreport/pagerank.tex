@@ -1,0 +1,111 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.5.1}
+
+\newtheorem{claim}{Claim}[section]
+\title{\sf Pagerank}
+%\date{\GITAuthorDate}
+%\author{Thore Husfeldt}
+
+\begin{document}
+\maketitle
+
+\section{Pagerank Lab Report}
+
+by Erik Westrup \& Dmitry Basavin
+
+\subsection{Transition probabilities}
+
+The transition matrix for the graph described in three.txt
+is\ldots
+\begin{equation*}
+P = 
+\left(
+\begin{array}{cccc}
+0.0375      & 0.60416667  & 0.32083333  & 0.0375\\
+0.0375      & 0.0375      & 0.8875      & 0.0375\\
+0.32083333  & 0.32083333  & 0.0375      & 0.32083333\\
+0.25        & 0.25        & 0.25        & 0.25
+\end{array}
+\right)\,,
+\end{equation*}
+and its 10th power is
+\begin{equation*}
+P^{10} = 
+\left(
+\begin{array}{cccc}
+0.17850697  & 0.27947537  & 0.36351069  & 0.17850697\\
+0.17843446  & 0.27962193  & 0.36350914  & 0.17843446\\
+0.1784065   & 0.27952146  & 0.36366553  & 0.1784065 \\
+0.17841349  & 0.27954658  & 0.36362644  & 0.17841349
+\end{array}
+\right)\,.
+\end{equation*}
+
+The transition matrix $P$ can be broken down into  $P = \alpha(H + D)
++ \frac{1-\alpha}{n} \bf 1$, where 
+
+\begin{equation*}
+H =
+\left(
+\begin{array}{cccc}
+0 & 0.666666666667 & 0.333333333333 & 0 \\
+0 & 0 & 1.0 & 0 \\
+0.333333333333 & 0.333333333333 & 0 & 0.333333333333 \\
+0 & 0 & 0 & 0
+\end{array}
+\right)\,,
+\end{equation*}
+
+\begin{equation*}
+D =
+\left(
+\begin{array}{cccc}
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.25 & 0.25 & 0.25 & 0.25 \\
+\end{array}
+\right)\,.
+\end{equation*}
+
+\subsection{Results}
+
+The following table gives the top hits, i.e., the 5 first vertices of
+each graph sorted by page rank, using $\alpha = \frac{85}{100}$.
+
+
+
+\medskip
+\begin{fullwidth}
+\small
+\begin{tabular}{lcccccccccc}
+three.txt & 2 (36.358721\%) & 1 (27.954581\%) & 0 (17.843349\%) & 3 (17.843349\%) \\
+tiny.txt &  1 (26.502868\%) & 0 (25.841882\%) & 3 (25.064251\%) & 2 (13.548244\%) & 4 (9.042756\%) \\
+medium.txt & 6 (5.890977\%)  & 22 (5.704853\%)  & 9 (3.972767\%) & 13 (3.895865\%) & 23 (3.805359\%) \\
+wikipedia.txt & 1 (40.014747\%)  &2 (35.612424\%)  &4 (6.457156\%)  &3 (3.429417\%)  &5 (3.429417\%)  \\
+p2p-Gnutella08-mod.txt & 367 (0.238792\%)  &249 (0.218450\%)  &145 (0.205512\%)  &264 (0.199899\%)  &266 (0.196362\%)  &
+\end{tabular}
+\end{fullwidth}
+
+\bigskip The following table gives the number of random walk steps and
+(scalar) multiplications needed for each graph until the results were
+stable to within 2 decimal places.
+
+\medskip
+\begin{fullwidth}
+\small
+\begin{tabular}{lcccccccccc}
+Graph & \# transitions  & \# multiplications \\
+three.txt & 64001 & 374 \\
+tiny.txt & 75704 & 936\\
+medium.txt & - & 10758\\
+wikipedia.txt & 60864 & 4473\\
+p2p-Gnutella08-mod.txt & - & 441070
+\end{tabular}
+\end{fullwidth}
+
+
+\end{document}
