@@ -37,7 +37,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Do the google page rank.')
     parser.add_argument('-n', '--nbr-iterations', type=int, required=True, help='Number of iterations.')
     parser.add_argument('filename', nargs='?', default='../data/three.txt', help="File name to read graph from.")
-    parser.add_argument('-m', '--method', type=int, choices=[1,11,2,3], default=1, help="What method to use.")    
+    parser.add_argument('-m', '--method', type=int, choices=[1,11,2,3,31], default=1, help="What method to use.")    
     args = parser.parse_args()
 
     if args.method == 2 and not power_of_two(args.nbr_iterations):
@@ -81,9 +81,18 @@ def page_rank_stable(adj_dict, nbr_iterations):
 
 def is_unstable(freqs, prev_freqs, count):
     for node in freqs.keys():
-        # use 3 decimal places to determine stability
-        cur = int(freqs[node]/count * 1000)
-        prev = int(prev_freqs[node]/(count-1) * 1000)
+        # use 5 decimal places to determine stability
+        cur = int(freqs[node]/count * 100000)
+        prev = int(prev_freqs[node]/(count-1) * 100000)
+        if not cur == prev:
+            return True
+    return False
+
+def is_unstable2(freqs, prev_freqs):
+    for node in freqs.keys():
+        # use 5 decimal places to determine stability
+        cur = int(freqs[node] * 100000)
+        prev = int(prev_freqs[node] * 100000)
         if not cur == prev:
             return True
     return False
@@ -141,6 +150,30 @@ def dh_iterations(adj_dict, nbr_iterations):
 		
     return {i : p[i] for i in range(len(adj_dict))}
 
+def dh_iterations_stable(adj_dict, nbr_iterations):
+    H, D  = build_static_matrices(adj_dict)
+    print("NNZ in H: {:d}".format(H.nnz))
+
+    num_nodes = len(adj_dict)
+    p = numpy.array([1] + [0 for x in range(num_nodes - 1)])
+	
+    unstable = True
+    itercount = 1
+    while unstable:
+        old_freqs = {i : p[i] for i in range(len(adj_dict))}
+        itercount += 1
+
+        alpha_p = ALPHA * p
+        p1_elem = (1-ALPHA) * sum(p) / num_nodes
+        p1 = numpy.array([ p1_elem for i in range(num_nodes)])
+        p = alpha_p * H + mul_vector_matrix(alpha_p, D) + p1
+
+        freqs = {i : p[i] for i in range(len(adj_dict))}
+        unstable = is_unstable2(freqs, old_freqs)
+		
+    return {i : p[i] for i in range(len(adj_dict))}, itercount
+
+
 def print_freqs(freqs, method):
     print("Method #{:d}\nNode\tRelFreq".format(method))
     for node in freqs.keys():
@@ -160,7 +193,10 @@ def main():
     elif method is 2:
         rel_freqs = q_iterations(adj_dict, nbr_iterations)
     elif method is 3:    
-        rel_freqs = dh_iterations(adj_dict, nbr_iterations)    
+        rel_freqs = dh_iterations(adj_dict, nbr_iterations)
+    elif method is 31:    
+        rel_freqs, count = dh_iterations_stable(adj_dict, nbr_iterations)
+        print("Count is {:d}".format(count))
     print_freqs(rel_freqs, method)
 
     most_freq = most_frequent(rel_freqs, 5)
