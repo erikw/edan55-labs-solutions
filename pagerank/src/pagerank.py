@@ -24,8 +24,8 @@ def read_datafile(filename):
         sys.exit(2)
     nbr_nodes = int(filehandle.readline())
     adj_dict = {x:[] for x in range(nbr_nodes)}
-    for i in range(nbr_nodes):
-        pairs = [int(x) for x in filehandle.readline().split()]
+    for line in filehandle:
+        pairs = [int(x) for x in line.split()]
         for i in range(0, len(pairs), 2):
             a = pairs[i];
             b = pairs[i + 1];
