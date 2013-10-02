@@ -6,14 +6,25 @@ __author__ = "Erik Westrup, Dmitry Basavin"
 import sys
 import argparse
 import random
+import queue
 
+class CollatzEntry:
+    def __init__(self, hashvalue):
+        self.hashvalue = hashvalue
+
+    def __lt__(self, other):
+        if self.hashvalue > other.hashvalue:
+            return -1
+        else:
+            return 1
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Do the google page rank.')
     parser.add_argument('-m', '--method', type=int, choices=[1,2,3], default=1, help="Method to use.")    
     parser.add_argument('-N', '--Number', type=int, default=10, help="Number of sequences to generate.")    
+    parser.add_argument('-t', '--tsize', type=int, default=128, help="Number of hashes to store.")    
     args = parser.parse_args()
-    return args.Number, args.method
+    return args.Number, args.method, args.tsize
 
 def gen_seq(n):
     seq = [n]
@@ -54,6 +65,8 @@ def find_max_in_seq(N):
 
 def is_i_in_seq(N, i):
     for n in range(1, N+1):
+        if element == i:
+            return True
         element = n
         if element == i:
             return True
@@ -91,10 +104,43 @@ def calc_algo(C_N):
     return max_val, len(freqs.keys()), sum(freqs.values())
 
 
+R = 56991483541 # > max found number for seq C_1000000
+a =  19709937611
+b = 275215972
+
+def h(x):
+    return (a * x + b) % R
+
+def maintain_pque(pque, t, element):
+    hashval = h(element)
+    if pque.qsize() < t:
+        pque.put(CollatzEntry(hashval))
+    else:
+        cur_max = pque.get()
+        if hashval < cur_max.hashvalue:
+            pque.put(CollatzEntry(hashval))
+        else:
+            pque.put(cur_max)
+
+def D(N, t):
+    pque = queue.PriorityQueue(t)
+    for n in range(1, N + 1):
+        element = n
+        maintain_pque(pque, t, element)
+        while element != 1:
+            if element % 2 == 0:
+                element /= 2
+            else:
+                element = element * 3 + 1
+            maintain_pque(pque, t, element)
+    max_hashv = pque.get().hashvalue
+    return round(t * R / max_hashv)
+            
+
         
 
 def main():
-    N, method = parse_args()
+    N, method, t = parse_args()
     if method == 1:
         C_N = gen_flattened_seq(N)
         #print("C_{:d} {:s}".format(N, C_N))
@@ -105,7 +151,9 @@ def main():
         #print("max number in C_{:d} = {:d}".format(N, max_nbr))
         distinct_elems = count_distict(N, max_nbr)
         print("The number of distinct elements was {:d}".format(distinct_elems))
-
+    elif method == 3:
+        distinct_elems = D(N, t)
+        print("The number of distinct elements was {:d}".format(distinct_elems))
 
     return 0
 
