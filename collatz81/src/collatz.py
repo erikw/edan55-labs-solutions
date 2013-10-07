@@ -7,11 +7,14 @@ import sys
 import argparse
 import random
 
+import heapq
+
 from collatzque import CollatzQue
 
 
 R = 56991483541 # > max found number for seq C_1000000
-a =  19709937611
+a = 19709937611
+
 b = 275215972
 
 def parse_args():
@@ -105,7 +108,7 @@ def calc_algo(C_N):
 
 
 def h(x):
-    return (a * x + b) % R
+    return ((a * x + b) % R)
 
 def maintain_pque(pque, t, element):
     hashvalue = h(element)
@@ -130,7 +133,42 @@ def D(N, t):
             maintain_pque(pque, t, element)
     max_hashvalue = pque.get()
     return round(t * R / max_hashvalue)
+
+
+def maintain_heap(element, t, saved_hashes, already_saved):
+    hashvalue = -h(element)
+    if hashvalue not in already_saved:
+        if len(already_saved) < t:
+            # we still have memory to store new hashes
+            heapq.heappush(saved_hashes, hashvalue)
+            already_saved.add(hashvalue)
+        elif hashvalue > saved_hashes[0]:
+            # current hash is smaller than the largest stored hash value
+            # (we use > instead of < because we store negative hashes in our heap)
+            already_saved.add(hashvalue)
+            already_saved.remove(saved_hashes[0])
+            heapq.heappushpop(saved_hashes, hashvalue)
             
+
+def D_Heap(N, t):
+    saved_hashes = []
+    already_saved = set()
+    for n in range(1, N + 1):
+        element = n
+        maintain_heap(element, t, saved_hashes, already_saved)
+        while element != 1:
+            if element % 2 == 0:
+                element /= 2
+            else:
+                element = element * 3 + 1
+            maintain_heap(element, t, saved_hashes, already_saved)
+
+    max_hashvalue = -heapq.heappop(saved_hashes)
+
+    # hack hack hack for smaller instances where N=10 or N=100
+    if t > len(saved_hashes):
+        t = len(saved_hashes)
+    return round(R * t / max_hashvalue)        
 
 def main():
     N, method, t = parse_args()
@@ -145,7 +183,9 @@ def main():
         distinct_elems = count_distict(N, max_nbr)
         print("The number of distinct elements was {:d}".format(distinct_elems))
     elif method == 3:
-        distinct_elems = D(N, t)
+        #distinct_elems = D(N, t)
+        distinct_elems = D_Heap(N, t)
+        
         print("The number of distinct elements was {:d}".format(distinct_elems))
 
     return 0
