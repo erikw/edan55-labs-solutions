@@ -1,0 +1,46 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+%\usepackage[separate-uncertainty]{siunitx}
+\usepackage{tikz}
+
+\newtheorem{claim}{Claim}[section]
+\title{\sf Lab Report: Marking Trees}
+\date{}
+\begin{document}
+\maketitle
+
+by Erik Westrup. 
+
+\subsection{Results}
+
+For $i\in\{1,2,3\}$, the number of rounds $R_i$ spent until the tree
+is completely marked in process $i$ is given in the following table.
+The table shows the result of $[10]$ repeated
+trails.
+
+\input{data_table.tex}
+
+\section{Analysis}
+
+\subsection{Empirical}
+Our experimental data indicates that $\mathbf E [R_1]$ is upper bounded by the expected value of a gemoetric distribution i.e. $O(nlogn)$ and below by $O(n)$.
+
+For R2 is upper bounded by $(n)$ and lower bounded by the best case $(n/2)$
+
+For R3 we have the expected value of $n/2$ eactly and $\Theta(n/2)$.
+
+while $\mathbf E[R_2]$ [$\cdots$], and $\mathbf E[R_3]$
+[$\cdots$].
+
+\subsection{Theorideical}
+Theoretically, the behaviour of $R_1$ should be lower bounded by $O(n/2)$ too but we didn't see that in our empirical data.
+
+Turns out that for $n/2$ of the nodes, the leafs, this is a coupons collectors problem. Our empirical data followed this as the upper bound of $n(logn)$. The mark cascading propagates biased upwards i.e. it's more likely to mark up wards. The non-leaf nodes will be marked with hihgh probability anyways so focus on the coupons problem on pairs of leaf.
+
+There are $n/4$ pairs of leafs so the bound is $O(\frac{n}{4}log(\frac{n}{4}))$.
+
+
+\end{document}

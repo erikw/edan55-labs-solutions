@@ -1,0 +1,188 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.5.1}
+
+% Program listings.
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset {
+				language=Matlab,					% The language of the code.
+				basicstyle=\footnotesize,				% The size of the fonts that are used for the code.
+				numbers=left,						% Where to put the line-numbers.
+				numberstyle=\tiny\color{gray},				% The style that is used for the line-numbers.
+				stepnumber=1,						% The step between two line-numbers. If it's 1, each line will be numbered.
+				numbersep=5pt,						% How far the line-numbers are from the code.
+				backgroundcolor=\color{white},				% Choose the background color. You must add \usepackage{color}.
+				showspaces=false,					% Show spaces adding particular underscores.
+				showstringspaces=false,				% Underline spaces within strings.
+				showtabs=false,					% Show tabs within strings adding particular underscores.
+				frame=single,						% Adds a frame around the code.
+				rulecolor=\color{black},				% If not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here)).
+				tabsize=2,						% Sets default tabsize to 2 spaces.
+				captionpos=b,						% Sets the caption-position to bottom.
+				breaklines=true,					% Sets automatic line breaking.
+				breakatwhitespace=false,				% Sets if automatic breaks should only happen at whitespace.
+				title=\lstname,					% Show the filename of files included with \lstinputlisting;  also try caption instead of title.
+				keywordstyle=\color{blue},				% Keyword style.
+				commentstyle=\color{dkgreen},				% Comment style.
+				stringstyle=\color{mauve},				% String literal style.
+				escapeinside={\%}{)}					% If you want to add a comment within your code.
+				%morekeywords={*,...}					% If you want to add more keywords to the set.
+}
+
+\newtheorem{claim}{Claim}[section]
+\title{\sf Approximation Algorithm for Maximum Cut}
+%\date{\GITAuthorDate}
+%\author{Thore Husfeldt}
+
+\begin{document}
+\maketitle
+
+\section{Maxcut Lab Report}
+by Erik Westrup and Dmitry Basavin.
+
+\subsection{Running time}
+
+The running time of algorithm~R is $\Theta(n + m)$.
+
+\subsection{Randomness}
+
+Algorithm R uses $n$ random bits.
+
+\subsection{Solution quality}
+
+\paragraph{Experiments.}
+
+\begin{enumerate}
+\item
+For the input file  pw09\_100.9.txt with $t=100$ runs, we found
+an average cutsize of $C=12366.41$, roughly $90.54$\% of the optimum
+$\operatorname{OPT} = 13658$.
+The distribution of cutsizes looks as follows:
+
+\medskip
+\noindent
+\input{data/R_pw09_100.9.txt.tex}
+
+\item
+For the input file matching\_1000.txt with $t=100$ runs, we found
+an average cutsize of $C=249.77$, roughly $49.95$\% of the optimum
+$\operatorname{OPT} = 500$.
+The distribution of cutsizes looks as follows:
+
+\medskip
+\noindent
+\input{data/R_matching_1000.txt.tex}
+
+
+\end{enumerate}
+\paragraph{Analysis of performance guarantee}
+
+Clearly, Algorithm R performs quite badly on input 
+  matching\_1000.txt.
+We will show that it can perform \emph{no worse} than that, i.e., we
+will establish that in expectation, the cutsize $C$ satisfies $C \geq
+\frac{1}{2}\cdot \operatorname{OPT}$.\
+
+
+We will view $C$ as a random variable that gives the size of the cut
+defined by the random choices.
+Let $W$ denote the total weight of the edges of $G$, i.e.,
+\[ W= \sum_{e\in E} w(e)\,.\]
+
+Then,
+\begin{equation}\label{eq: E[C]}
+E[C] = \textstyle\frac{1}{2}\cdot W\,.
+\end{equation}
+
+To see this, define the indicator random variable $X_{uv}$ for every
+edge $uv\in E$ as follows.
+Set $X_{uv}=1$ if $uv$ crosses the cut, i.e., $u\in A$ and $v\notin A$
+or $u\notin A$ and $v\in A$.
+Otherwise, $X_{uv} = 0$.
+
+Then, $\Pr(X_{uv} = 1) = \Pr([u\in A \land v \in V-A] \lor  [v\in A \land u \in V-A])=\frac{1}{4}+\frac{1}{4}=\frac{1}{2}$. This equation holds because the probabilistic events in the square brackets are disjoint. Now
+\begin{equation*}
+	E[C]=E \Big [\sum_{(e)\in E}X_{e}\cdot w(e) \Big]
+\end{equation*}
+Then by the linearity of expectation,
+\begin{equation*}
+	E[C] = \sum_{(e)\in E}E[X_{e}]\cdot w(e) =
+\end{equation*}
+\begin{equation*}
+	=\sum_{(uv) \in E} Pr(X_{e}=1)\cdot 1 \cdot w(e) =
+\end{equation*}
+\begin{equation*}
+	=\sum_{(e) \in E} \frac{1}{2}\cdot w(e) =
+\end{equation*}
+\begin{equation*}
+	=\frac{1}{2}\sum_{(e) \in E} w(e) =\frac{1}{2} \cdot W
+\end{equation*}
+Finally, we have 
+\(E[C]\geq \frac1{2}\cdot \text{OPT}\) because since all the weights are positive:
+\begin{equation*}
+W \geq \text{OPT}
+\end{equation*}
+Hence,
+\begin{equation*}
+E[C] = \frac1{2} \cdot W \geq \frac1{2}\cdot \text{OPT}
+\end{equation*}
+
+
+
+
+\newpage
+\section{Optional: Derandomising Algorithm R}
+
+\subsection{Algorithm L} 
+
+
+We now reduce the number of random bits used by the algorithm to $\log
+n$ using a simple \emph{pseudorandom generator}.
+
+
+Let $k=\lceil\log (n+1)\rceil$ and flip $k$ coins $b_1,\ldots, b_k$.
+There are $2^k -1 \geq n$ different ways of choosing a nonempty subset
+$S\subseteq [k]$ of the coins.
+Each of these ways defines a random bit $r_S =\bigoplus_{i\in S} b_i$.
+(Here, $\oplus$ denotes exclusive or.)
+This gives a total of $n$ random bits.
+These random bits are not as high-quality as the original $k$ bits,
+but they retain the crucial property of \emph{pairwise independence}:
+If $S\neq T$ then
+\[ \Pr(r_S\neq r_T) = \frac1{2} \]
+
+Extend Algorithm~R using this idea; call the resulting
+algorithm~L (for logarithmic randomness).
+
+\subsection{Algorithm Z}
+
+For our final trick, we let the random bits disappear completely:
+since Algorithm~L uses only $k$ bits of randomness, we can iterate
+over \emph{all} coin flips---there are only $2^k$, which is polynomial
+(in fact, linear) in $n$.
+Extend algorithm~L using this idea; call the resulting algorithm~Z
+(for zero randomness).
+
+
+Our implementation of the Z algorithm iterates over all $2^k$ subsets, and for each of them we generate $2^k$ sequences which are sum-xored in logarithmic time in $n$. And finally we find a weight of a max cut by summing over all the edges which requires the number of operations proportional to $m$. Hence, the total running time of the algorithm, with $k\approx \log_2 (n+1)$, is $O(2^k \cdot (2^k\cdot k + m)) = O(2^{\log_2 (n+1)}(2^{\log_2 (n+1)}\cdot \log_2 (n+1) + m)) = O((n+1)((n+1)\cdot \log_2(n+1) + m))=O(n((n\cdot \log_2(n) + m))$.
+
+
+
+
+
+
+
+\newpage
+\section*{Appendix}
+\appendix
+\lstinputlisting[language=Python,label=list+prog1,caption={\lstname.  The algorithms.}]{../../src/algorithms.py}
+
+\end{document}
+
+# NOTE file two: first node does not matter, 50% that the sedond gets right -> 0.5OPT, .5^n prop of hitting OPT
