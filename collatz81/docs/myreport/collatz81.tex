@@ -1,0 +1,84 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath,amsthm}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\newtheorem{claim}{Claim}[section]
+\title{Collatz 81}
+\author{}
+
+\begin{document}
+\maketitle
+
+
+\section{Collatz 81 Report}
+
+
+by Erik Westrup \& Dimitry Basavin.
+
+\subsection{1. Dictionaries}
+
+We let $C_N$ denote the (``flattened'') sequence of the sequences
+$c_1,\ldots, c_N$. For instance, $C_3$ is 1, 2, 1, 3, 10, 5, 16, 8, 4,
+2, 1.
+
+
+The following table gives the maximum value appearing in $C_N$, the number
+of distinct values in $C_N$ (i.e., the cardinality of $C_N$ viewed as
+a set), and the total length of the sequence $|c_1|+\cdots+|c_N|$,
+for increasing values of $N$.
+
+\medskip
+\begin{tabular}{rrrr}
+  \toprule
+  $N$ & $\max C_N$ & $|C_N|$ & len($C_N$) \\
+  \midrule
+  10 & 52 & 22 & 77  \\
+  100 &  9232 & 251 & 3242 \\
+  1,000 & 250504 & 2228 & 60542 \\
+  10,000 & 27114424 & 21664 & 859666 \\
+  100,000 & 1570824736 & 217212 & 10853840\\
+  1,000,000 & 56991483520 & 2168611 & 132434424 \\
+  \bottomrule
+\end{tabular}
+
+
+\subsection{2. Quadratic Time}
+
+The first solution in small space uses the following idea: For given
+$N$, produce every value of $C_N$ (without storing the entire
+sequence!)
+to determine $\max C_N$.
+Start a counter at 0.
+Then, for every $i=1,\ldots, \max C_N$, produce the entire sequence to
+see if $i$ appears.
+If so, increase the counter.
+The running time will grow as the product of $\operatorname{len}C_N$ and $ \max C_n$.
+
+The largest $N$ for which this idea works within 60 seconds on our
+machine was $100$.
+
+
+\subsection{3. Randomized Approximation in Small Space}
+
+The following table shows the output of our implementation of
+Algorithm D, together with the error (in percent) relative to the
+correct values of $|C_N|$ computed in the first part of the report.
+
+\medskip
+\begin{tabular}{rrr}
+  \toprule
+  $N$ &   output & relative error \\
+  \midrule
+  10 & 21 & 0.045 \\
+  100 & 250 & 0.004 \\
+  1,000 & 2242 & 0.0063 \\
+  10,000 & 21510 & 0.0071 \\
+  100,000 & 222251 & 0.023 \\
+  1,000,000 & 2539469 & 0.17 \\
+  \bottomrule
+\end{tabular}
+\end{document}
+ 
