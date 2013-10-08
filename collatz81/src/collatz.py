@@ -14,7 +14,6 @@ from collatzque import CollatzQue
 
 R = 56991483541 # > max found number for seq C_1000000
 a = 19709937611
-
 b = 275215972
 
 def parse_args():
@@ -100,12 +99,6 @@ def calc_algo(C_N):
             freqs[c] = 0
         freqs[c] += 1
     return max_val, len(freqs.keys()), sum(freqs.values())
-
-
-
-
-
-
 
 def h(x):
     return ((a * x + b) % R)
