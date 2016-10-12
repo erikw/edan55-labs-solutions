@@ -1,4 +1,4 @@
-Labs for EDAN55
+Labs for EDAN55 (private copy with solutions)
 ===============
 
 A set of exploratory assignments designed for the course EDAN55
