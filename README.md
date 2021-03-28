@@ -1,5 +1,6 @@
-Labs for EDAN55 (private copy with solutions)
+Labs for EDAN55 (solutions)
 ===============
+Instructions repo is at: [thorehusfeldt/edan55-labs](https://github.com/thorehusfeldt/edan55-labs)
 
 A set of exploratory assignments designed for the course EDAN55
 “Advanced Algorithms” at Lund University.
